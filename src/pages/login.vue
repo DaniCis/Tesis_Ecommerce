@@ -96,7 +96,10 @@
     .layout-content{
         display: flex;
         justify-content: center;
-        background-image: url('https://images.unsplash.com/photo-1513530534585-c7b1394c6d51?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8dGVjaHxlbnwwfDB8MHxibHVlfA%3D%3D&auto=format&fit=crop&w=500&q=60');
+        background-image: url('https://wallpaperaccess.com/full/295694.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
         .surface-card{
             margin-top: 6em;
             margin-bottom: 6em;

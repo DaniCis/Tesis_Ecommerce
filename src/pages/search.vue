@@ -15,24 +15,13 @@
             <TransitionChild as="template" enter="transition ease-in-out duration-300 transform" enter-from="translate-x-full" enter-to="translate-x-0" leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0" leave-to="translate-x-full">
               <DialogPanel class="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
                 <div class="px-4 flex items-center justify-between">
-                  <h2 class="text-lg font-medium text-gray-900">Filters</h2>
+                  <h2 class="text-lg font-medium text-gray-900">Filtros</h2>
                   <button type="button" class="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400" @click="mobileFiltersOpen = false">
-                    <span class="sr-only">Close menu</span>
                     <XIcon class="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
-
                 <!-- Filters -->
                 <form class="mt-4 border-t border-gray-200">
-                  <h3 class="sr-only">Categories</h3>
-                  <ul role="list" class="font-medium text-gray-900 px-2 py-3">
-                    <li v-for="category in subCategories" :key="category.name">
-                      <a :href="category.href" class="block px-2 py-3">
-                        {{ category.name }}
-                      </a>
-                    </li>
-                  </ul>
-
                   <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-t border-gray-200 px-4 py-6" v-slot="{ open }">
                     <h3 class="-mx-2 -my-3 flow-root">
                       <DisclosureButton class="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
@@ -63,58 +52,21 @@
         </Dialog>
       </TransitionRoot>
 
-      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="relative z-10 flex items-baseline justify-between pt-24 pb-6 border-b border-gray-200">
-          <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">New Arrivals</h1>
-
+      <main class="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative z-10 flex items-baseline justify-between pt-14 pb-6 border-b border-gray-200">
+          <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Búsqueda de Productos</h1>
           <div class="flex items-center">
-            <Menu as="div" class="relative inline-block text-left">
-              <div>
-                <MenuButton class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                  Sort
-                  <ChevronDownIcon class="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                </MenuButton>
-              </div>
-
-              <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                <MenuItems class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div class="py-1">
-                    <MenuItem v-for="option in sortOptions" :key="option.name" v-slot="{ active }">
-                      <a :href="option.href" :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">
-                        {{ option.name }}
-                      </a>
-                    </MenuItem>
-                  </div>
-                </MenuItems>
-              </transition>
-            </Menu>
-
-            <button type="button" class="p-2 -m-2 ml-5 sm:ml-7 text-gray-400 hover:text-gray-500">
-              <span class="sr-only">View grid</span>
-              <ViewGridIcon class="w-5 h-5" aria-hidden="true" />
-            </button>
             <button type="button" class="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden" @click="mobileFiltersOpen = true">
-              <span class="sr-only">Filters</span>
-              <FilterIcon class="w-5 h-5" aria-hidden="true" />
+              <FilterIcon class="w-8 h-8" aria-hidden="true" />
             </button>
           </div>
         </div>
 
         <section aria-labelledby="products-heading" class="pt-6 pb-24">
-          <h2 id="products-heading" class="sr-only">Products</h2>
-
           <div class="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
             <!-- Filters -->
             <form class="hidden lg:block">
-              <h3 class="sr-only">Categories</h3>
-              <ul role="list" class="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
-                <li v-for="category in subCategories" :key="category.name">
-                  <a :href="category.href">
-                    {{ category.name }}
-                  </a>
-                </li>
-              </ul>
-
+              
               <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-b border-gray-200 py-6" v-slot="{ open }">
                 <h3 class="-my-3 flow-root">
                   <DisclosureButton class="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
@@ -122,8 +74,8 @@
                       {{ section.name }}
                     </span>
                     <span class="ml-6 flex items-center">
-                      <PlusSmIcon v-if="!open" class="h-5 w-5" aria-hidden="true" />
-                      <MinusSmIcon v-else class="h-5 w-5" aria-hidden="true" />
+                      <PlusSmIcon v-if="!open" class="h-8 w-8" aria-hidden="true" />
+                      <MinusSmIcon v-else class="h-8 w-8" aria-hidden="true" />
                     </span>
                   </DisclosureButton>
                 </h3>
@@ -139,12 +91,58 @@
                 </DisclosurePanel>
               </Disclosure>
             </form>
-
-            <!-- Product grid -->
-            <div class="lg:col-span-3">
-              <!-- Replace with your content -->
-              
-              <!-- /End replace -->
+            <div class="content-section">
+              <div class="card">
+                <DataView :value="products" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder" :sortField="sortField">
+                  <template #header>
+                    <div class="grid grid-nogutter">
+                        <div class="col-6" style="text-align: left">
+                            <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="Ordenar por Precio" @change="onSortChange($event)"/>
+                        </div>
+                        <div class="col-6" style="text-align: right">
+                            <DataViewLayoutOptions v-model="layout" />
+                        </div>
+                    </div>
+                  </template>
+                  <template #list="slotProps">
+                    <div class="col-12">
+                      <div class="product-list-item">
+                        <img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
+                        <div class="product-list-detail">
+                          <div class="product-name">{{slotProps.data.nombre_producto}}</div>
+                          <i class="pi pi-tag product-category-icon"></i><span class="product-category">Nuevo</span>
+                        </div>
+                        <div class="product-list-action">
+                          <span class="product-price">{{slotProps.data.pvp_item}}</span>
+                          <Button icon="pi pi-shopping-cart" label="Add to Cart" ></Button>
+                          <span class="product-badge status-instock">En Stock</span>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                  <template #grid="slotProps">
+                    <div class="col-12 md:col-4">
+                      <div class="product-grid-item card">
+                        <div class="product-grid-item-top">
+                          <div>
+                            <i class="pi pi-tag product-category-icon"></i>
+                            <span class="product-category">Nuevo</span>
+                          </div>
+                          <span class="product-badge status-instock">En Stock</span>
+                        </div>
+                        <div class="product-grid-item-content">
+                          <img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
+                          <div class="product-name">{{slotProps.data.nombre_producto}}</div>
+                        </div>
+                        <div class="product-grid-item-bottom">
+                          <span class="product-price">{{slotProps.data.pvp_item}}</span>
+                          <Button icon="pi pi-shopping-cart"></Button>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </DataView>
+              </div>
             </div>
           </div>
         </section>
@@ -178,17 +176,10 @@ const sortOptions = [
   { name: 'Price: Low to High', href: '#', current: false },
   { name: 'Price: High to Low', href: '#', current: false },
 ]
-const subCategories = [
-  { name: 'Totes', href: '#' },
-  { name: 'Backpacks', href: '#' },
-  { name: 'Travel Bags', href: '#' },
-  { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
-]
 const filters = [
   {
-    id: 'color',
-    name: 'Color',
+    id: 'marca',
+    name: 'Marca',
     options: [
       { value: 'white', label: 'White', checked: false },
       { value: 'beige', label: 'Beige', checked: false },
@@ -207,18 +198,6 @@ const filters = [
       { value: 'travel', label: 'Travel', checked: true },
       { value: 'organization', label: 'Organization', checked: false },
       { value: 'accessories', label: 'Accessories', checked: false },
-    ],
-  },
-  {
-    id: 'size',
-    name: 'Size',
-    options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
     ],
   },
 ]
@@ -248,10 +227,54 @@ export default {
 
     return {
       sortOptions,
-      subCategories,
       filters,
       mobileFiltersOpen,
     }
   },
+  data() {
+    return { 
+      open:false,
+      products: [],
+      layout: 'grid',
+      id:null,
+      sortKey: null,
+      sortOrder: null,
+      sortField: null,
+      sortOptions: [
+          {label: 'Más alto a bajo', value: '!pvp_item'},
+          {label: 'Más bajo a alto', value: 'pvp_item'},
+      ]
+    }
+  },
+  mounted() {
+    this.getProducts()
+  },
+  methods: {
+    async getProducts(){
+      await this.axios.get('http://10.147.17.173:5002/productos/public'
+      ).then(response => {
+        if(response.data !=null)
+          this.products = response.data
+      }).catch (e=> {
+        this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
+      })
+    },
+    onSortChange(event){
+      const value = event.value.value;
+      const sortValue = event.value;
+      console.log(value)
+      console.log(sortValue)
+      if (value.indexOf('!') === 0) {
+          this.sortOrder = -1;
+          this.sortField = value.substring(1, value.length);
+          this.sortKey = sortValue;
+      }
+      else {
+          this.sortOrder = 1;
+          this.sortField = value;
+          this.sortKey = sortValue;
+      }
+  }
+  }
 }
 </script>

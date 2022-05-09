@@ -33,7 +33,7 @@
 </template>
 
 <script>
-    import {required } from "@vuelidate/validators"
+    import { required } from "@vuelidate/validators"
     import { useVuelidate } from "@vuelidate/core"
     import { useAuthStore } from '../stores/auth'
 

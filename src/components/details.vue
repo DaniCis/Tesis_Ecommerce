@@ -10,7 +10,6 @@
             <div class="flex text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-4xl">
                 <div class="w-full relative flex items-center bg-white px-4 pt-14 pb-8 overflow-hidden shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
                     <button type="button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-500 sm:top-8 sm:right-6 md:top-6 md:right-6 lg:top-8 lg:right-8" @click="closeModal">
-                        <span class="sr-only">Close</span>
                         <XIcon class="h-8 w-8" aria-hidden="true" />
                     </button>
                     <div class="w-full grid-cols-1 gap-y-8 gap-x-6 items-start sm:grid-cols-12 lg:gap-x-8" style="display:grid">
@@ -21,29 +20,29 @@
                                 </template>
                                 <template #thumbnail="slotProps">
                                     <img :src="slotProps.item.ImageSrc" :alt="slotProps.item.alt" style="width: 100%; display: block;" />
-                                </template>{{id}}
+                                </template>
                             </Galleria>-->
-                           <img :src="product.imageSrc" :alt="product.imageAlt" class="object-center object-cover" />
+                           <img src="" alt="no" class="object-center object-cover" />
                         </div>
                         <div class="sm:col-span-8 lg:col-span-7">
                             <h2 class="text-2xl font-extrabold text-gray-900 sm:pr-12">
-                                {{ product.name }}
+                                {{nombre}}
                             </h2>
                             <section aria-labelledby="information-heading" class="mt-2">
-                                <p class="text-2xl text-gray-900">{{ product.price }}</p>
+                                <p class="text-2xl text-gray-900">{{precio}}</p>
                             </section>
                             <section aria-labelledby="options-heading" class="mt-4">
                                 <form>
                                     <div>
                                         <div>
-                                            <label class="block text-500 font-medium mb-2">{{product.imageAlt}}</label>
+                                            <label class="block text-500 font-medium mb-2">{{detalle}}</label>
                                         </div>
                                         <div class="mt-5">
                                             <label class="block text-800 font-medium mb-2">Marca</label>
                                         </div>
                                         <div class="mt-4">
                                             <label class="block text-800 font-medium mb-2" for='stock'>Stock</label>
-                                            <InputNumber id='stock' v-model='product.stock' :min="0" :max="100" showButtons/>
+                                            <InputNumber id='stock' v-model='cantidad' :min="0" :max="100" showButtons/>
                                         </div>
                                         
                                     </div>
@@ -64,47 +63,30 @@
 	import {
         Dialog,
         DialogOverlay,
-        RadioGroup,
-        RadioGroupLabel,
-        RadioGroupOption,
         TransitionChild,
         TransitionRoot,
 	} from '@headlessui/vue'
 	import { XIcon } from '@heroicons/vue/outline'
-	import { StarIcon } from '@heroicons/vue/solid'
 
-	const product = {
-        name: 'Basic Tee 6-Pack ',
-        price: '$192',
-        href: '#',
-        stock: 5,
-        imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-quick-preview-02-detail.jpg',
-        imageAlt: 'Two each of gray, white, and black shirts arranged on table.',
-	}
 export default {
     components: {
 		Dialog,
 		DialogOverlay,
-		RadioGroup,
-		RadioGroupLabel,
-		RadioGroupOption,
 		TransitionChild,
 		TransitionRoot,
-		StarIcon,
 		XIcon,
-	},
-	setup() {
-		return {
-			product,
-		}
 	},
     data(){
         return{
-            
+            nombre:'',
+            detalle:'',
+            cantidad:null,
+            precio:'',
         }
     },
-    mounted(){
-        
+    created(){
+        console.log(this.id)
+        this.getDetalleProducto(this.id)
     },
     props:{
         open:Boolean,
@@ -113,10 +95,23 @@ export default {
     methods:{
         closeModal(){
             this.$emit('getModalValue',this.open) 
-        }
+        },
+        async getDetalleProducto(id){
+            await this.axios.get(`http://10.147.17.173:5002/detalleProducto/venta/findById/${id}`
+            ).then(response => {
+                this.nombre = response.data.nombre_producto
+                this.detalle = response.data.nombre_producto
+                this.precio = response.data.pvp_item
+                this.cantidad = response.data.cantidad_producto
+            })
+            .catch(e => {
+                this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
+            })
+        },
     }
 }
 </script>
+
 <style>
     .p-inputnumber-buttons-stacked .p-inputnumber-input {
         width: 80px;

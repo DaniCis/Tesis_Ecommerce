@@ -1,16 +1,11 @@
-<!--
-      require('@tailwindcss/forms'),
--->
 <template>
   <div class="bg-white">
     <div>
-      <!-- Mobile filter dialog -->
       <TransitionRoot as="template" :show="mobileFiltersOpen">
         <Dialog as="div" class="relative z-40 lg:hidden" @close="mobileFiltersOpen = false">
           <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100" leave-to="opacity-0">
             <div class="fixed inset-0 bg-black bg-opacity-25" />
           </TransitionChild>
-
           <div class="fixed inset-0 flex z-40">
             <TransitionChild as="template" enter="transition ease-in-out duration-300 transform" enter-from="translate-x-full" enter-to="translate-x-0" leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0" leave-to="translate-x-full">
               <DialogPanel class="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
@@ -20,7 +15,6 @@
                     <XIcon class="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
-                <!-- Filters -->
                 <form class="mt-4 border-t border-gray-200">
                   <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-t border-gray-200 px-4 py-6" v-slot="{ open }">
                     <h3 class="-mx-2 -my-3 flow-root">
@@ -54,7 +48,7 @@
 
       <main class="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative z-10 flex items-baseline justify-between pt-14 pb-6 border-b border-gray-200">
-          <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Búsqueda de Productos</h1>
+          <h2 class="text-3xl font-extrabold tracking-tight text-gray-900">Búsqueda de Productos</h2>
           <div class="flex items-center">
             <button type="button" class="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden" @click="mobileFiltersOpen = true">
               <FilterIcon class="w-8 h-8" aria-hidden="true" />
@@ -62,11 +56,9 @@
           </div>
         </div>
 
-        <section aria-labelledby="products-heading" class="pt-6 pb-24">
-          <div class="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
-            <!-- Filters -->
-            <form class="hidden lg:block">
-              
+        <section aria-labelledby="products-heading" class="pt-2 pb-20">
+          <div class="grid">
+            <form class=" col-2 hidden lg:block">            
               <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-b border-gray-200 py-6" v-slot="{ open }">
                 <h3 class="-my-3 flow-root">
                   <DisclosureButton class="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
@@ -91,7 +83,7 @@
                 </DisclosurePanel>
               </Disclosure>
             </form>
-            <div class="content-section">
+            <div class="col-10 content-section layout-content">
               <div class="card">
                 <DataView :value="products" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder" :sortField="sortField">
                   <template #header>
@@ -167,15 +159,8 @@ import {
   TransitionRoot,
 } from '@headlessui/vue'
 import { XIcon } from '@heroicons/vue/outline'
-import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/vue/solid'
+import {  FilterIcon, MinusSmIcon, PlusSmIcon, } from '@heroicons/vue/solid'
 
-const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
-]
 const filters = [
   {
     id: 'marca',
@@ -187,17 +172,6 @@ const filters = [
       { value: 'brown', label: 'Brown', checked: false },
       { value: 'green', label: 'Green', checked: false },
       { value: 'purple', label: 'Purple', checked: false },
-    ],
-  },
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
     ],
   },
 ]
@@ -215,18 +189,14 @@ export default {
     MenuItems,
     TransitionChild,
     TransitionRoot,
-    ChevronDownIcon,
     FilterIcon,
     MinusSmIcon,
     PlusSmIcon,
-    ViewGridIcon,
     XIcon,
   },
   setup() {
     const mobileFiltersOpen = ref(false)
-
     return {
-      sortOptions,
       filters,
       mobileFiltersOpen,
     }
@@ -278,3 +248,139 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.p-selectbutton{
+	box-shadow: none;
+}
+.p-dropdown {
+    width: 14rem;
+    font-weight: normal;
+}
+.product-name {
+	font-size: 1.5rem;
+	font-weight: 700;
+}
+.product-description {
+	margin: 0 0 1rem 0;
+}
+.product-category-icon {
+	vertical-align: middle;
+	margin-right: .5rem;
+}
+.product-category {
+	font-weight: 600;
+	vertical-align: middle;
+}
+::v-deep(.product-list-item) {
+	display: flex;
+	align-items: center;
+	padding: 1rem;
+	width: 100%;
+	img {
+		width: 150px;
+		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+		margin-right: 2rem;
+	}
+	.product-list-detail {
+		flex: 1 1 0;
+	}
+	.p-rating {
+		margin: 0 0 .5rem 0;
+	}
+	.product-price {
+		font-size: 1.5rem;
+		font-weight: 600;
+		margin-bottom: .5rem;
+		align-self: flex-end;
+	}
+	.product-list-action {
+		display: flex;
+		flex-direction: column;
+	}
+	.p-button {
+		margin-bottom: .5rem;
+	}
+}
+::v-deep(.product-grid-item) {
+	margin: .5rem;
+	border: 1px solid var(--surface-border);
+	.product-grid-item-top,
+	.product-grid-item-bottom {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	img {
+		width: 75%;
+		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+		margin: 2rem 0;
+		display: inline;
+	}
+	.product-grid-item-content {
+		text-align: center;
+	}
+	.product-price {
+		font-size: 1.5rem;
+		font-weight: 600;
+	}
+}
+@media screen and (max-width: 576px) {
+	.product-list-item {
+		flex-direction: column;
+		align-items: center;
+		img {
+			width: 75%;
+			margin: 2rem 0;
+		}
+		.product-list-detail {
+			text-align: center;
+		}
+		.product-price {
+			align-self: center;
+		}
+		.product-list-action {
+			display: flex;
+			flex-direction: column;
+		}
+		.product-list-action {
+			margin-top: 2rem;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+		}
+	}
+}
+
+.product-badge {
+	border-radius: 2px;
+	padding: .25em .5rem;
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 12px;
+	letter-spacing: .3px;
+}
+
+.product-badge.status-instock {
+	background: #87e48a;
+	color: #256029;
+	width:82px;
+}
+
+.product-badge.status-outofstock {
+	background: #FFCDD2;
+	color: #C63737;
+}
+
+.product-badge.status-lowstock {
+	background: #FEEDAF;
+	color: #8A5340;
+}
+.layout-content .card {
+    background:#fff;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+</style>

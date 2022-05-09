@@ -5,7 +5,7 @@
 			<p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">Nuevos Productos</p>
 			<p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">Lorem ipsum dolor sit amet consect adipisicing elit.</p>
 		</div>
-		<div class="content-section implementation mt-4">
+		<div class="content-section layout-content implementation mt-4">
             <div class="card">
                 <DataView :value="products" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder" :sortField="sortField">
 					<template #header>
@@ -58,7 +58,7 @@
 				</DataView>
             </div>
 		</div>
-		<Details :open="this.open" @getModalValue="getValue($event)" :id="this.id" />
+		<Details v-if="open" :open="this.open" @getModalValue="getValue($event)" :id="this.id" />
 	</div>
 </template>
 

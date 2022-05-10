@@ -3,7 +3,7 @@
         <Toast />
         <div class="surface-card p-4 shadow-2 border-round w-full lg:w-4">
             <div class="text-center mb-5">
-                <i class="pi pi-user mb-3" style="font-size: 2rem"></i>
+                <i class="pi pi-user mb-3" style="font-size: 1.5rem"></i>
                 <div class="text-900 text-3xl font-medium mb-4">Iniciar Sesión</div>
                 <span class="text-600 font-medium line-height-3">No tienes una cuenta?</span>
                 <router-link to="/register" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Crea una aquí</router-link>
@@ -41,7 +41,6 @@
         setup() {
             const v$ = useVuelidate()
             const authStore = useAuthStore()
-
             return { v$, authStore }
         },
         data(){

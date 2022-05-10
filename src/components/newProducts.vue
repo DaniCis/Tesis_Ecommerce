@@ -1,4 +1,5 @@
 <template>
+	<Toast />
 	<div class="py-8 px-4 sm:px-6 lg:px-8">
 		<div class="lg:text-center">
 			<h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Nuevos</h2>

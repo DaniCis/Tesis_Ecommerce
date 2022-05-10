@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <div class="bg-white">
     <div>
       <TransitionRoot as="template" :show="mobileFiltersOpen">
@@ -11,20 +12,24 @@
               <DialogPanel class="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
                 <div class="px-4 flex items-center justify-between">
                   <h2 class="text-lg font-medium text-gray-900">Filtros</h2>
-                  <button type="button" class="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400" @click="mobileFiltersOpen = false">
+                  <button type="button" class="-mr-8 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400" @click="mobileFiltersOpen = false">
                     <XIcon class="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
-                <form class="mt-4 border-t border-gray-200">
-                  <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-t border-gray-200 px-4 py-6" v-slot="{ open }">
+                <form class="mt-1 border-t border-gray-200">
+                  <span class="p-input-icon-left ml-4 mt-3 mb-3">
+                    <i class="pi pi-search" />
+                    <InputText type="text" placeholder="Buscar" style="width:270px" />
+                  </span>  
+                  <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-t border-gray-200 px-4 py-4" v-slot="{ open }">
                     <h3 class="-mx-2 -my-3 flow-root">
                       <DisclosureButton class="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
                         <span class="font-medium text-gray-900">
                           {{ section.name }}
                         </span>
                         <span class="ml-6 flex items-center">
-                          <PlusSmIcon v-if="!open" class="h-5 w-5" aria-hidden="true" />
-                          <MinusSmIcon v-else class="h-5 w-5" aria-hidden="true" />
+                          <PlusSmIcon v-if="!open" class="h-8 w-8" aria-hidden="true" />
+                          <MinusSmIcon v-else class="h-8 w-8" aria-hidden="true" />
                         </span>
                       </DisclosureButton>
                     </h3>
@@ -39,7 +44,9 @@
                       </div>
                     </DisclosurePanel>
                   </Disclosure>
+                  <Button class='mt-2 ml-4' label="Buscar" ></Button>
                 </form>
+                
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -47,7 +54,7 @@
       </TransitionRoot>
 
       <main class="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="relative z-10 flex items-baseline justify-between pt-14 pb-6 border-b border-gray-200">
+        <div class="relative z-10 flex items-baseline justify-between pt-6 pb-5 border-b border-gray-200">
           <h2 class="text-3xl font-extrabold tracking-tight text-gray-900">Búsqueda de Productos</h2>
           <div class="flex items-center">
             <button type="button" class="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden" @click="mobileFiltersOpen = true">
@@ -55,10 +62,13 @@
             </button>
           </div>
         </div>
-
         <section aria-labelledby="products-heading" class="pt-2 pb-20">
           <div class="grid">
-            <form class=" col-2 hidden lg:block">            
+            <form class="col-2 hidden lg:block"> 
+              <span class="p-input-icon-left mt-6">
+                <i class="pi pi-search" />
+                <InputText type="text" placeholder="Buscar" style="width:260px" />
+              </span>        
               <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-b border-gray-200 py-6" v-slot="{ open }">
                 <h3 class="-my-3 flow-root">
                   <DisclosureButton class="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
@@ -82,6 +92,7 @@
                   </div>
                 </DisclosurePanel>
               </Disclosure>
+              <Button class='mt-4' label="Buscar" ></Button>
             </form>
             <div class="col-10 content-section layout-content">
               <div class="card">
@@ -139,6 +150,7 @@
           </div>
         </section>
       </main>
+      <Details v-if="open" :open="this.open" @getModalValue="getValue($event)" :id="this.id" />
     </div>
   </div>
 </template>
@@ -160,6 +172,7 @@ import {
 } from '@headlessui/vue'
 import { XIcon } from '@heroicons/vue/outline'
 import {  FilterIcon, MinusSmIcon, PlusSmIcon, } from '@heroicons/vue/solid'
+import Details from '../components/details.vue'
 
 const filters = [
   {
@@ -193,6 +206,7 @@ export default {
     MinusSmIcon,
     PlusSmIcon,
     XIcon,
+    Details
   },
   setup() {
     const mobileFiltersOpen = ref(false)
@@ -229,6 +243,15 @@ export default {
         this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
       })
     },
+    openModal(id){
+			this.id = id
+			this.open = true
+		},
+
+		getValue(e) {     
+			this.open = !e;
+		},
+
     onSortChange(event){
       const value = event.value.value;
       const sortValue = event.value;
@@ -379,8 +402,8 @@ export default {
 }
 .layout-content .card {
     background:#fff;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 10px;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 </style>

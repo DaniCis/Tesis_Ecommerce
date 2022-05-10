@@ -26,6 +26,7 @@ import ToastService from 'primevue/toastservice'
 import InputNumber from 'primevue/inputnumber';
 import Galleria from 'primevue/galleria';
 import Fieldset from 'primevue/fieldset';
+import Skeleton from 'primevue/skeleton';
 
 
 const app = createApp(App)
@@ -49,5 +50,6 @@ app.component('Toast',Toast)
 app.component('InputNumber',InputNumber)
 app.component('Galleria', Galleria)
 app.component('Fieldset',Fieldset)
+app.component('Skeleton', Skeleton)
 
 app.mount('#app')

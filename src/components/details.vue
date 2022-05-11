@@ -13,7 +13,7 @@
                     <button type="button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-500 sm:top-8 sm:right-6 md:top-6 md:right-6 lg:top-8 lg:right-8" @click="closeModal">
                         <XIcon class="h-8 w-8" aria-hidden="true" />
                     </button>
-                    <div class="w-full grid" v-if="cantidad ==null">
+                    <div class="w-full grid" v-if="stock ==null">
                         <div class='col-12 md:col-6' >
                             <Skeleton class="mb-2" width="100%" height="18rem"/>
                         </div>
@@ -44,7 +44,7 @@
                                 <p class="text-2xl text-gray-900">{{precio}}</p>
                             </section>
                             <section aria-labelledby="options-heading" class="mt-4">
-                                <form v-if="cantidad !=null">
+                                <form @submit.prevent="addToCart(id)">
                                     <div>
                                         <div>
                                             <label class="block text-500 font-medium mb-2">{{detalle}}</label>
@@ -55,7 +55,7 @@
                                         </div>
                                         <div  class="mt-4">
                                             <label class="block text-800 font-medium mb-2" for='stock'>Stock</label>
-                                            <InputNumber id='stock' v-model='cantidad' :min="0" :max="100" showButtons/>
+                                            <InputNumber id='stock' v-model='cantidad' :min="1" :max="stock" showButtons/>
                                         </div>
                                     </div>
                                     <button type="submit" class="mt-5 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Añadir al carrito</button>
@@ -92,7 +92,8 @@ export default {
         return{
             nombre:'',
             detalle:'',
-            cantidad:null,
+            cantidad:1,
+            stock:null,
             precio:'',
             marca:'',
             imagenes:[],
@@ -124,13 +125,18 @@ export default {
         closeModal(){
             this.$emit('getModalValue',this.open) 
         },
+
+        addToCart(id){
+			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000});
+		},
+
         async getDetalleProducto(id){
             await this.axios.get(`http://10.147.17.173:5002/detalleProducto/venta/findById/${id}`
             ).then(response => {
                 this.nombre = response.data.nombre_producto
                 this.detalle = response.data.detalle_producto
                 this.precio = response.data.pvp_item
-                this.cantidad = response.data.cantidad_producto
+                this.stock = response.data.cantidad_producto
                 this.marca = response.data.marca_producto
                 this.nombres = response.data.imagen_producto
                 for (var i = 0; i < this.nombres.length; i++) {

@@ -51,7 +51,7 @@
 								</div>
 								<div class="product-grid-item-bottom">
 									<span class="product-price">{{slotProps.data.pvp_item}}</span>
-									<Button icon="pi pi-shopping-cart"></Button>
+									<Button @click="addToCart(slotProps.data.id_producto)" icon="pi pi-shopping-cart"></Button>
 								</div>
 							</div>
 						</div>
@@ -96,7 +96,11 @@ export default {
 				this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
             })
         },
-		
+
+		addToCart(id){
+			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000});
+		},
+
 		openModal(id){
 			this.id = id
 			this.open = true

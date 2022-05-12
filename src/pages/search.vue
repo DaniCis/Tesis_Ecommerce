@@ -96,7 +96,7 @@
             </form>
             <div class="col-10 content-section layout-content">
               <div class="card">
-                <DataView :value="products" :layout="layout" :paginator="true" :rows="6" :sortOrder="sortOrder" :sortField="sortField">
+                <DataView :value="products" :layout="layout" :paginator="true" :rows="8" :sortOrder="sortOrder" :sortField="sortField">
                   <template #header>
                     <div class="grid grid-nogutter">
                         <div class="col-6" style="text-align: left">
@@ -117,14 +117,14 @@
                         </div>
                         <div class="product-list-action">
                           <span class="product-price">{{slotProps.data.pvp_item}}</span>
-                          <Button icon="pi pi-shopping-cart" label="Add to Cart" ></Button>
+                          <Button icon="pi pi-shopping-cart" label="Añadir al carrito"></Button>
                           <span class="product-badge status-instock">En Stock</span>
                         </div>
                       </div>
                     </div>
                   </template>
                   <template #grid="slotProps">
-                    <div class="col-12 md:col-4">
+                    <div class="col-12 md:col-3">
                       <div class="product-grid-item card">
                         <div class="product-grid-item-top">
                           <div>
@@ -273,6 +273,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .p-selectbutton{
 	box-shadow: none;
 }
@@ -281,11 +282,9 @@ export default {
     font-weight: normal;
 }
 .product-name {
-	font-size: 1.5rem;
+	font-size: 1rem;
 	font-weight: 700;
-}
-.product-description {
-	margin: 0 0 1rem 0;
+	text-transform:capitalize;
 }
 .product-category-icon {
 	vertical-align: middle;
@@ -312,7 +311,7 @@ export default {
 		margin: 0 0 .5rem 0;
 	}
 	.product-price {
-		font-size: 1.5rem;
+		font-size: 1.3rem;
 		font-weight: 600;
 		margin-bottom: .5rem;
 		align-self: flex-end;
@@ -335,16 +334,16 @@ export default {
 		justify-content: space-between;
 	}
 	img {
-		width: 75%;
+		width: 60%;
 		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-		margin: 2rem 0;
+		margin: 1.5rem 0;
 		display: inline;
 	}
 	.product-grid-item-content {
 		text-align: center;
 	}
 	.product-price {
-		font-size: 1.5rem;
+		font-size: 1.3rem;
 		font-weight: 600;
 	}
 }
@@ -353,7 +352,7 @@ export default {
 		flex-direction: column;
 		align-items: center;
 		img {
-			width: 75%;
+			width: 50%;
 			margin: 2rem 0;
 		}
 		.product-list-detail {
@@ -391,19 +390,10 @@ export default {
 	width:82px;
 }
 
-.product-badge.status-outofstock {
-	background: #FFCDD2;
-	color: #C63737;
-}
-
-.product-badge.status-lowstock {
-	background: #FEEDAF;
-	color: #8A5340;
-}
 .layout-content .card {
     background:#fff;
     padding: 1.5rem;
     border-radius: 10px;
-    margin-bottom: 1.5rem;
-}
+    margin-bottom: 2rem;
+} 
 </style>

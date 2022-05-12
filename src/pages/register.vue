@@ -16,6 +16,11 @@
                         <small v-if="(v$.user.$invalid && submitted) || v$.user.$pending.$response" class="p-error">Este campo es requerido</small>
                     </div>
                     <div class="mb-4">
+                        <label class="block text-600 font-medium mb-2" :class="{'p-error':v$.correo.$invalid && submitted}">Email</label>
+                        <InputText type="text" v-model="v$.correo.$model" :class="{'p-invalid':v$.correo.$invalid && submitted}" placeholder="Email" />
+                        <small v-if="(v$.correo.$invalid && submitted) || v$.correo.$pending.$response" class="p-error">Este campo es requerido</small>
+                    </div>
+                    <div class="mb-4">
                         <label :class="{'p-error':v$.password.$invalid && submitted}" class="block text-600 font-medium mb-2">Contraseña</label>
                         <span class="p-input-icon-left">
                             <i class="pi pi-lock" />
@@ -26,6 +31,7 @@
                     <div class="mt-6">
                         <Button type="submit" label="Ingresar" class="w-full"></Button>
                     </div>
+                   
                 </form>
             </div>
         </div>
@@ -42,7 +48,6 @@
             return{
                 user:'',
                 password:'',
-                nombre:'',
                 correo:'',
                 submitted: false,
             };
@@ -51,7 +56,6 @@
             return {
                 user: { required },
                 password: { required },
-                nombre:{ required },
                 correo:{
                     required, 
                     email
@@ -71,12 +75,11 @@
 
             async registrarCliente(){
                 var params = {
-                    nombre_cliente: this.nombre.trim(),
-                    correo_cliente: this.correo.trim(),
+                    email_usuario: this.correo.trim(),
                     nombre_usuario: this.user.trim(),
                     password_usuario: this.password.trim()
                 }
-                await axios.post(`http://10.147.17.173:5004/crearCliente/`, params
+                await axios.post(`http://10.147.17.173:5005/usuario/create`, params
                 ).then(() => {
                     this.resetForm()
                     this.$router.push('/');

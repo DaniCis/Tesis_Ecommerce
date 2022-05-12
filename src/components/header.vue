@@ -53,7 +53,7 @@
             </div>
             <PopoverGroup class="hidden lg:ml-8 lg:block lg:self-stretch">
               <div class="h-full flex space-x-8">
-                <a v-for="page in navigation.pages" :key="page.name" :href="page.href" class="flex items-center font-medium text-gray-600 hover:text-gray-400">{{ page.name }}</a>
+                <router-link v-for="page in navigation.pages" :key="page.name" :to="page.href" class="flex items-center font-medium text-gray-600 hover:text-gray-400">{{ page.name }}</router-link>
               </div>
             </PopoverGroup>
             <div class="ml-auto flex items-center">
@@ -110,7 +110,7 @@
 
   const navigation = {
     pages: [
-      { name: 'Nuestros Productos', href: '#' },
+      { name: 'Nuestros Productos', href: '/products' },
     ],
   }
 

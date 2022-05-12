@@ -65,6 +65,13 @@
 
 <script>
 import Details from './details.vue'
+import { initializeApp } from 'firebase/app'
+import { getDatabase, ref , onValue , set , push} from 'firebase/database'
+import config from '../services/config'
+
+var app = initializeApp(config);
+var db = getDatabase(app)
+var carritoRef = ref(db, "carrito")
 
 export default {
 
@@ -82,14 +89,21 @@ export default {
                 {label: 'Más alto a bajo', value: '!pvp_item'},
                 {label: 'Más bajo a alto', value: 'pvp_item'},
             ],
-
-
         }
     },
     mounted() {
         this.getProducts()
+		/*
+		LEER CARRITO
+		onValue(carritoRef, (snapshot) => {
+			const data = snapshot.val();
+			console.log(data)
+		});
+		*/
+		
     },
     methods: {
+		
         async getProducts(){
             await this.axios.get('http://10.147.17.173:5002/productos/public'
             ).then(response => {
@@ -101,7 +115,12 @@ export default {
         },
 
 		addToCart(id){
-
+			
+			var carritoUser = ref(db, 'carrito/'+ id)
+			push(carritoUser,{
+				cantidad:1,
+				id: id
+			})
 			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000});
 		},
 

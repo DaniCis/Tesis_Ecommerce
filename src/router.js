@@ -5,12 +5,14 @@ import Principal from './components/principal.vue'
 import Register from './pages/register.vue'
 import Search from './pages/search.vue'
 import Checkout from './pages/checkout.vue'
+import Products from './pages/products.vue'
 
 const routes = [
     { path: "/", component:Principal },
     { path: "/login", component: Login },
     { path: "/register", component:Register },
     { path: "/search", component:Search},
+    { path: "/products", component:Products},
     { path: "/checkout", 
       component:Checkout, 
       meta:{

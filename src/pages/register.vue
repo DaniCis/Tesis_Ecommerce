@@ -91,7 +91,6 @@
             resetForm() {
                 this.user = ''
                 this.password = ''
-                this.nombre = ''
                 this.correo = ''
                 this.submitted = false
             }
@@ -108,8 +107,8 @@
         background-size: cover;
         background-position: center;
         .surface-card{
-            margin-top: 6em;
-            margin-bottom: 6em;
+            margin-top: 5em;
+            margin-bottom: 5em;
         }
     }
 </style>

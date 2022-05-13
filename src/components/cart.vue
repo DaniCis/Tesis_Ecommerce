@@ -123,6 +123,7 @@ export default {
     abrir:Boolean,
   },
   mounted(){
+    
   },
   methods:{
     closeCart(){

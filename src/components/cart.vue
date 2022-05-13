@@ -15,7 +15,6 @@
                     <DialogTitle class="text-lg font-medium text-gray-900">Carrito de Compras</DialogTitle>
                     <div class="ml-3 flex h-7 items-center">
                       <button type="button" class="-m-2 p-2 text-gray-400 hover:text-gray-500" @click="closeCart">
-                        <span class="sr-only">Close panel</span>
                         <XIcon class="h-8 w-8" aria-hidden="true" />
                       </button>
                     </div>
@@ -77,6 +76,12 @@
 
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XIcon } from '@heroicons/vue/outline'
+import { initializeApp } from 'firebase/app'
+import { getDatabase, ref , onValue} from 'firebase/database'
+import config from '../services/config'
+
+var app = initializeApp(config);
+var db = getDatabase(app)
 
   const products = [
     {
@@ -114,13 +119,22 @@ export default {
       products,
     }
   },
-    props:{
-        abrir:Boolean,
+  props:{
+    abrir:Boolean,
+  },
+  mounted(){
+  },
+  methods:{
+    closeCart(){
+      this.$emit('getCartValue',this.abrir) 
     },
-    methods:{
-        closeCart(){
-            this.$emit('getCartValue',this.abrir) 
-        }
+    cargarCarrito(){
+      var carritoRef = ref(db, "carrito/"+'prueba')
+      onValue(carritoRef, (snapshot) => {
+        const data = snapshot.val();
+        console.log(data)
+      })
     }
+  }
 }
 </script>

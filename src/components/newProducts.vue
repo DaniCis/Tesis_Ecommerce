@@ -66,7 +66,7 @@
 <script>
 import Details from './details.vue'
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref , onValue , set , push} from 'firebase/database'
+import { getDatabase, ref , set , push} from 'firebase/database'
 import config from '../services/config'
 
 var app = initializeApp(config);
@@ -94,11 +94,10 @@ export default {
     mounted() {
         this.getProducts()
 		/*
-		LEER CARRITO
 		onValue(carritoRef, (snapshot) => {
 			const data = snapshot.val();
 			console.log(data)
-		});
+		})
 		*/
     },
     methods: {

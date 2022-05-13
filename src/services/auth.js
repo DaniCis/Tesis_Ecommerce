@@ -6,10 +6,10 @@ export function getAccessToken(){
 
 export function getDecoded(){
   if(getAccessToken()){
-      let token_decoded = jwt_decode(getAccessToken()) 
-      return token_decoded
+    let token_decoded = jwt_decode(getAccessToken()) 
+    return token_decoded
   }else
-  return null
+    return null
 }
 
 export function getUser(){

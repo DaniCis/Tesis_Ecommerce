@@ -78,7 +78,7 @@
               <div class="ml-4 flow-root lg:ml-6">
                 <a href="#" class="group -m-2 p-2 flex items-center">
                   <ShoppingCartIcon @click="openCart" class="flex-shrink-0 h-7 w-7 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                  <Badge value="0" severity="info" class="mr-2"></Badge>
                 </a>
               </div>
             </div>

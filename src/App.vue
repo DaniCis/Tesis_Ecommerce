@@ -7,13 +7,27 @@
   </div>
 </template>
 
-<script setup>
+<script >
   
   import Header from "./components/header.vue"
   import Principal from "./components/principal.vue"
   import Footer from "./components/footer.vue"
   import CheckToken from "./components/checkToken.vue"
+  import { v4 as uuidv4 } from 'uuid';
 
-  components: { Header, Principal, Footer, CheckToken}  
-  
+  export default{
+    components: { Header, Principal, Footer, CheckToken},
+
+    mounted(){
+      this.crearId()
+    },
+
+    methods:{
+      crearId(){
+        const id = uuidv4()
+        localStorage.setItem('ID',id)
+      },
+    }
+    
+  }
 </script>

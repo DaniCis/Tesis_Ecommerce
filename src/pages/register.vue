@@ -79,8 +79,9 @@
                     nombre_usuario: this.user.trim(),
                     password_usuario: this.password.trim()
                 }
-                await axios.post(`http://10.147.17.173:5005/usuario/create`, params
-                ).then(() => {
+                await this.axios.post(`http://10.147.17.173:5005/usuario/create`, params
+                ).then((response) => {
+                    console.log(response.data)
                     this.resetForm()
                     this.$router.push('/');
                 }).catch (e => {

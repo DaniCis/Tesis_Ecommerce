@@ -100,10 +100,8 @@ export default {
 			console.log(data)
 		});
 		*/
-		
     },
     methods: {
-		
         async getProducts(){
             await this.axios.get('http://10.147.17.173:5002/productos/public'
             ).then(response => {
@@ -115,8 +113,8 @@ export default {
         },
 
 		addToCart(id){
-			
-			var carritoUser = ref(db, 'carrito/'+ id)
+
+			var carritoUser = ref(db, 'carrito/'+ 'prueba')
 			push(carritoUser,{
 				cantidad:1,
 				id: id

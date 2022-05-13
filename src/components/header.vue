@@ -22,13 +22,13 @@
               <div class="flow-root">
                  <router-link to="/login" v-if="!isLoggedIn" class="-m-2 p-2 block font-medium text-gray-700">Iniciar Sesión</router-link>
                  <div class="flex" v-if="isLoggedIn">
-                  <UserIcon class="h-5 text-gray-400 mr-1" aria-hidden="true" />
-                  <span class="block font-medium text-gray-700">{{userName}}</span>
+                  <Avatar icon="pi pi-user" class="mr-2" style="background-color:#2196F3; color: #ffffff" shape="circle" />
+                  <button style="cursor:auto" class="-m-2 p-2 block font-medium text-gray-800 text-sm">{{userName}}</button>
                 </div>
               </div>
               <div class="flow-root">
                 <router-link to="/register" v-if="!isLoggedIn" class="-m-2 p-2 block font-medium text-gray-700">Crear Cuenta</router-link>
-                <a v-if="isLoggedIn" @click="logout" class="-m-2 p-2 block font-medium text-gray-700 hover:text-gray-400">Cerrar Sesión</a>
+                <a v-if="isLoggedIn" @click="openConfirmation" class="-m-2 p-2 block font-medium text-gray-700 hover:text-gray-400">Cerrar Sesión</a>
               </div>
             </div>
           </div>
@@ -60,13 +60,13 @@
               <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                 <router-link to="/login" v-if="!isLoggedIn" class="text-sm font-medium text-gray-700 hover:text-gray-400">Iniciar Sesión</router-link>
                 <div class="ml-2 flex lg:ml-6" v-if="isLoggedIn">
-                  <UserIcon class="h-5 w-5 text-gray-400 mr-1" aria-hidden="true" />
-                  <span class="-m-2 p-2 block font-medium text-gray-700 text-sm">{{userName}}</span>
+                  <Avatar icon="pi pi-user" class="mr-2" style="background-color:#2196F3; color: #ffffff" shape="circle" />
+                  <button style="cursor:auto" class="-m-2 p-2 block font-medium text-gray-800 text-sm">{{userName}}</button>
                 </div>
                 <span class="h-6 w-px bg-gray-200" aria-hidden="true" />
                 <router-link to="/register" v-if="!isLoggedIn"  class="text-sm font-medium text-gray-700 hover:text-gray-400">Crear Cuenta</router-link>
                 <div class="flow-root">
-                 <button v-if="isLoggedIn" @click="logout" style="cursor:pointer" class="-m-2 p-2 block text-sm font-medium text-gray-700 hover:text-gray-400">Cerrar Sesión</button>
+                 <button v-if="isLoggedIn" @click="openConfirmation" style="cursor:pointer" class="-m-2 p-2 block text-sm font-medium text-gray-700 hover:text-gray-400">Cerrar Sesión</button>
                 </div>
               </div>
               <div class="flex lg:ml-6">
@@ -86,6 +86,17 @@
         </div>
       </nav>
     </header>
+    
+    <Dialog2 header="Confirmar" v-model:visible="displayConfirmation" :style="{width: '400px'}" :modal="true">
+      <div class="confirmation-content">
+          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem; color:red" />
+          <span>Esta seguro que desea cerrar sesion?</span>
+      </div>
+      <template #footer>
+          <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text"/>
+          <Button label="Si" icon="pi pi-check" @click="close" class="p-button-text" autofocus />
+      </template>
+    </Dialog2>
 
     <Cart :abrir='this.abrir' @getCartValue="getValue($event)" />
   </div>
@@ -140,7 +151,8 @@
     },
     data(){
       return{
-        abrir:false
+        abrir:false,
+        displayConfirmation: false,
       }
     },
     computed:{
@@ -154,13 +166,29 @@
       },
 
       getValue(e) {     
-        this.abrir = !e;
+        this.abrir = !e
       },
 
+      openConfirmation() {
+        this.displayConfirmation = true
+      },
+
+      closeConfirmation() {
+        this.displayConfirmation = false
+      },
+
+      close(){
+        this.displayConfirmation = false
+        this.logout
+      }
     }
   }
 </script>
 
 <style>
- 
+  .confirmation-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>

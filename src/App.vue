@@ -18,14 +18,15 @@
   export default{
     components: { Header, Principal, Footer, CheckToken},
 
-    mounted(){
+    created(){
       this.crearId()
     },
 
     methods:{
       crearId(){
         const id = uuidv4()
-        localStorage.setItem('ID',id)
+        if(!localStorage.getItem('ID'))
+          localStorage.setItem('ID',id)
       },
     }
     

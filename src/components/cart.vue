@@ -123,14 +123,15 @@ export default {
     abrir:Boolean,
   },
   mounted(){
-    
+    this.cargarCarrito()
   },
   methods:{
     closeCart(){
       this.$emit('getCartValue',this.abrir) 
     },
     cargarCarrito(){
-      var carritoRef = ref(db, "carrito/"+'prueba')
+      const ident = localStorage.getItem('ID')
+      var carritoRef = ref(db, "carrito/"+ ident)
       onValue(carritoRef, (snapshot) => {
         const data = snapshot.val();
         console.log(data)

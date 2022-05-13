@@ -71,7 +71,6 @@ import config from '../services/config'
 
 var app = initializeApp(config);
 var db = getDatabase(app)
-var carritoRef = ref(db, "carrito")
 
 export default {
 
@@ -93,12 +92,6 @@ export default {
     },
     mounted() {
         this.getProducts()
-		/*
-		onValue(carritoRef, (snapshot) => {
-			const data = snapshot.val();
-			console.log(data)
-		})
-		*/
     },
     methods: {
         async getProducts(){
@@ -112,8 +105,8 @@ export default {
         },
 
 		addToCart(id){
-
-			var carritoUser = ref(db, 'carrito/'+ 'prueba')
+			const ident = localStorage.getItem('ID')
+			var carritoUser = ref(db, 'carrito/'+ ident)
 			push(carritoUser,{
 				cantidad:1,
 				id: id

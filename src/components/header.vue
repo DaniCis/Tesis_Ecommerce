@@ -90,11 +90,11 @@
     <Dialog2 header="Confirmar" v-model:visible="displayConfirmation" :style="{width: '400px'}" :modal="true">
       <div class="confirmation-content">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem; color:red" />
-          <span>Esta seguro que desea cerrar sesion?</span>
+          <span> ¿Está seguro que desea cerrar sesión?</span>
       </div>
       <template #footer>
           <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text"/>
-          <Button label="Si" icon="pi pi-check" @click="close" class="p-button-text" autofocus />
+          <Button label="Sí" icon="pi pi-check" @click="close" class="p-button-text" autofocus />
       </template>
     </Dialog2>
 

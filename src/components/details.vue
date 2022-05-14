@@ -44,7 +44,7 @@
                                 <p class="text-2xl text-gray-900">{{precio}}</p>
                             </section>
                             <section aria-labelledby="options-heading" class="mt-4">
-                                <form @submit.prevent="addToCart(id)">
+                                <form @submit.prevent="addToCart(cantidad)">
                                     <div>
                                         <div>
                                             <label class="block text-500 font-medium mb-2">{{detalle}}</label>
@@ -79,6 +79,13 @@
         TransitionRoot,
 	} from '@headlessui/vue'
 	import { XIcon } from '@heroicons/vue/outline'
+    import { initializeApp } from 'firebase/app'
+    import { getDatabase, ref, push} from 'firebase/database'
+    import { getAccessToken, getUser } from '../services/auth'
+    import config from '../services/config'
+
+    var app = initializeApp(config);
+    var db = getDatabase(app)
 
 export default {
     components: {
@@ -126,8 +133,22 @@ export default {
             this.$emit('getModalValue',this.open) 
         },
 
-        addToCart(id){
+        addToCart(cantidad){
+            var ident =''
+			if( getAccessToken() == null)
+				ident = localStorage.getItem('ID')
+			else
+				ident = getUser()
+            console.log(ident)
+			var carritoUser = ref(db, 'carrito/'+ ident)
+			push(carritoUser,{
+				cantidad:cantidad,
+				id: this.id
+			})
 			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000});
+            setTimeout(()=>{
+                this.closeModal()
+            }, 3000)
 		},
 
         async getDetalleProducto(id){
@@ -140,7 +161,7 @@ export default {
                 this.marca = response.data.marca_producto
                 this.nombres = response.data.imagen_producto
                 for (var i = 0; i < this.nombres.length; i++) {
-                    var nombre ={
+                    var nombre = {
                         nombreImagen: this.nombres[i]
                     }
                     this.imagenes.push(nombre)

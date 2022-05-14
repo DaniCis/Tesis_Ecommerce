@@ -80,10 +80,9 @@
                     password_usuario: this.password.trim()
                 }
                 await this.axios.post(`http://10.147.17.173:5005/usuario/create`, params
-                ).then((response) => {
-                    console.log(response.data)
+                ).then(() => {
                     this.resetForm()
-                    this.$router.push('/');
+                    this.$router.push('/login');
                 }).catch (e => {
                     this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
                 })

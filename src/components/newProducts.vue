@@ -66,8 +66,9 @@
 <script>
 import Details from './details.vue'
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref , set , push} from 'firebase/database'
+import { getDatabase, ref , set , push, get} from 'firebase/database'
 import config from '../services/config'
+import { getAccessToken, getUser } from '../services/auth';
 
 var app = initializeApp(config);
 var db = getDatabase(app)
@@ -105,7 +106,11 @@ export default {
         },
 
 		addToCart(id){
-			const ident = localStorage.getItem('ID')
+			var ident =''
+			if( getAccessToken() == null)
+				ident = localStorage.getItem('ID')
+			else
+				ident = getUser()
 			var carritoUser = ref(db, 'carrito/'+ ident)
 			push(carritoUser,{
 				cantidad:1,

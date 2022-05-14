@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <TransitionRoot as="template" :show="abrir">
     <Dialog as="div" class="fixed inset-0 overflow-hidden" @close="closeCart">
       <div class="absolute inset-0 overflow-hidden">
@@ -24,17 +25,14 @@
                       <ul role="list" class="-my-6 divide-y divide-gray-200">
                         <li v-for="product in products" :key="product.id" class="flex py-5">
                           <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                            <img :src="product.imageSrc" :alt="product.imageAlt" class="h-full w-full object-cover object-center" />
+                            <img :src="product.imageSrc" class="h-full w-full object-cover object-center" />
                           </div>
                           <div class="ml-4 flex flex-1 flex-col">
                             <div>
                               <div class="flex justify-between text-base font-medium text-gray-900">
-                                <h3>
-                                  <a :href="product.href"> {{ product.name }} </a>
-                                </h3>
+                                <h3>{{ product.name }}</h3>
                                 <p class="ml-4">{{ product.price }}</p>
                               </div>
-                              <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
                             </div>
                             <div class="flex flex-1 items-end justify-between text-sm">
                               <p class="text-gray-500">Cant. {{ product.quantity }}</p>
@@ -54,13 +52,11 @@
                     <p>$122.00</p>
                   </div>
                   <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                  <div class="mt-6" @click="closeCart">
+                  <div class="mt-5" @click="closeCart">
                     <router-link to='/checkout' class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</router-link>
                   </div>
-                  <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
-                    <p>
-                      o <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="closeCart" >Seguir Comprando<span aria-hidden="true"> &rarr;</span></button>
-                    </p>
+                  <div class="mt-4 flex justify-center text-center text-sm text-gray-500">
+                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="closeCart" >Seguir Comprando<span aria-hidden="true"> &rarr;</span></button>
                   </div>
                 </div>
               </div>
@@ -73,15 +69,14 @@
 </template>
 
 <script>
+  import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+  import { XIcon } from '@heroicons/vue/outline'
+  import { initializeApp } from 'firebase/app'
+  import { getDatabase, ref , onValue} from 'firebase/database'
+  import config from '../services/config'
 
-import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { XIcon } from '@heroicons/vue/outline'
-import { initializeApp } from 'firebase/app'
-import { getDatabase, ref , onValue} from 'firebase/database'
-import config from '../services/config'
-
-var app = initializeApp(config);
-var db = getDatabase(app)
+  var app = initializeApp(config);
+  var db = getDatabase(app)
 
   const products = [
     {
@@ -105,38 +100,45 @@ var db = getDatabase(app)
     },
   ]  
 
-export default {
-  components: {
-    Dialog,
-    DialogOverlay,
-    DialogTitle,
-    TransitionChild,
-    TransitionRoot,
-    XIcon,
-  },
-  setup() {
-    return {
-      products,
-    }
-  },
-  props:{
-    abrir:Boolean,
-  },
-  mounted(){
-    this.cargarCarrito()
-  },
-  methods:{
-    closeCart(){
-      this.$emit('getCartValue',this.abrir) 
+  export default {
+    components: {
+      Dialog,
+      DialogOverlay,
+      DialogTitle,
+      TransitionChild,
+      TransitionRoot,
+      XIcon,
     },
-    cargarCarrito(){
-      const ident = localStorage.getItem('ID')
-      var carritoRef = ref(db, "carrito/"+ ident)
-      onValue(carritoRef, (snapshot) => {
-        const data = snapshot.val();
-        console.log(data)
-      })
+    setup() {
+      return {
+        products,
+      }
+    },
+    data(){
+      return{
+        carrito:[],
+        ids:[],
+      }
+    },
+    props:{
+      abrir:Boolean,
+    },
+    mounted(){
+      this.cargarCarrito()
+    },
+    methods:{
+      closeCart(){
+        this.$emit('getCartValue',this.abrir) 
+      },
+      cargarCarrito(){
+        const ident = localStorage.getItem('ID')
+        var carritoRef = ref(db, "carrito/"+ ident)
+        onValue(carritoRef, (snapshot) => {
+          this.carrito = snapshot.val()
+        })
+        
+      },
+      
     }
   }
-}
 </script>

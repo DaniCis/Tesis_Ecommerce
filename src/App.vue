@@ -8,7 +8,6 @@
 </template>
 
 <script >
-  
   import Header from "./components/header.vue"
   import Principal from "./components/principal.vue"
   import Footer from "./components/footer.vue"

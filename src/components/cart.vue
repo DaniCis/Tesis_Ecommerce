@@ -20,20 +20,20 @@
                       </button>
                     </div>
                   </div>
-                  <div class="mt-8">
+                  <div class="mt-7">
                     <div class="flow-root">
                       <ul role="list" class="-my-6 divide-y divide-gray-200">
-                        <li v-for="product in products" :key="product.id" class="flex py-5">
+                        <li v-for="product in productos" :key="product.id" class="flex py-5">
                           <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                            <img :src="product.imageSrc" class="h-full w-full object-cover object-center" />
+                            <img :src="`http://10.147.17.173:5002/productos/images_small/${product.id}/${product.imagen}`" :alt='product.nombre' class="h-full w-full object-cover object-center" />
                           </div>
                           <div class="ml-4 flex flex-1 flex-col">
-                            <div class="flex justify-between text-base font-medium text-gray-900">
-                              <h3>{{ product.name }}</h3>
-                              <p class="ml-4">{{ product.price }}</p>
+                            <div class="flex justify-between text-base font-medium text-gray-600">
+                              <h3>{{ product.nombre }}</h3>
+                              <p class="ml-4 text-gray-900">${{ product.precio }}</p>
                             </div>
                             <div class="flex flex-1 items-end justify-between text-sm">
-                              <p class="text-gray-500">Cant. {{ product.quantity }}</p>
+                              <p class="text-gray-500">Cant. {{ product.cantidad }}</p>
                               <div class="flex">
                                 <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Quitar</button>
                               </div>
@@ -71,32 +71,11 @@
   import { XIcon } from '@heroicons/vue/outline'
   import { initializeApp } from 'firebase/app'
   import { getDatabase, ref , onValue} from 'firebase/database'
+  import { getAccessToken, getUser } from '../services/auth';
   import config from '../services/config'
 
   var app = initializeApp(config);
   var db = getDatabase(app)
-
-  const products = [
-    {
-      id: 1,
-      name: 'Throwback Hip Bag',
-      href: '#',
-      price: '$90.00',
-      quantity: 1,
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-      imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-    },
-    {
-      id: 2,
-      name: 'Medium Stuff Satchel',
-      href: '#',
-      price: '$32.00',
-      quantity: 1,
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-      imageAlt:
-        'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-    },
-  ]  
 
   export default {
     components: {
@@ -107,36 +86,61 @@
       TransitionRoot,
       XIcon,
     },
-    setup() {
-      return {
-        products,
-      }
-    },
+ 
     data(){
       return{
-        carrito:[],
-        ids:[],
+        productos:[]
       }
     },
+
     props:{
       abrir:Boolean,
     },
+
     mounted(){
       this.cargarCarrito()
     },
+    
     methods:{
       closeCart(){
         this.$emit('getCartValue',this.abrir) 
       },
+      
       cargarCarrito(){
-        const ident = localStorage.getItem('ID')
+        var contenido = []
+        var ident =''
+        if( getAccessToken() == null)
+          ident = localStorage.getItem('ID')
+        else
+          ident = getUser()
         var carritoRef = ref(db, "carrito/"+ ident)
         onValue(carritoRef, (snapshot) => {
-          this.carrito = snapshot.val()
+            snapshot.forEach(function (childSnapshot) {
+            var value = childSnapshot.val()
+            contenido.push(value)
+          })
+          for (let i = 0; i < contenido.length; i++) {
+            this.getDetalleProducto(contenido[i].id,contenido[i].cantidad)
+          }
         })
-        
       },
-      
+
+      async getDetalleProducto(id,cantidad){
+        await this.axios.get(`http://10.147.17.173:5002/detalleProducto/venta/findById/${id}`
+        ).then(response => {
+          var info ={
+            id:id,
+            nombre :response.data.nombre_producto,
+            precio : response.data.pvp_item.slice(1)*cantidad,
+            imagen : response.data.imagen_producto[0],
+            cantidad : cantidad,
+          }
+          this.productos.push(info)
+        })
+        .catch(e => {
+          this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
+        })
+      },
     }
   }
 </script>

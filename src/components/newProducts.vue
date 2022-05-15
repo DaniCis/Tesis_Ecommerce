@@ -66,7 +66,7 @@
 <script>
 import Details from './details.vue'
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref , set , push, get} from 'firebase/database'
+import { getDatabase, ref , push} from 'firebase/database'
 import config from '../services/config'
 import { getAccessToken, getUser } from '../services/auth';
 

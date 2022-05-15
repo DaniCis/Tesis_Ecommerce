@@ -28,11 +28,9 @@
                             <img :src="product.imageSrc" class="h-full w-full object-cover object-center" />
                           </div>
                           <div class="ml-4 flex flex-1 flex-col">
-                            <div>
-                              <div class="flex justify-between text-base font-medium text-gray-900">
-                                <h3>{{ product.name }}</h3>
-                                <p class="ml-4">{{ product.price }}</p>
-                              </div>
+                            <div class="flex justify-between text-base font-medium text-gray-900">
+                              <h3>{{ product.name }}</h3>
+                              <p class="ml-4">{{ product.price }}</p>
                             </div>
                             <div class="flex flex-1 items-end justify-between text-sm">
                               <p class="text-gray-500">Cant. {{ product.quantity }}</p>

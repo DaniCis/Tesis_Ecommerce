@@ -23,13 +23,12 @@
         },
         async mounted(){
             var decodedToken = getDecoded()
-            if (decodedToken !=null){
+            if (decodedToken != null){
                 var date = new Date(decodedToken.exp *1000)
                 setTimeout(()=>{
                     this.openConfirmation()
                 }, date - Date.now())
             }
-            
         },
         computed:{
             ...mapActions(useAuthStore, ["logout"])

@@ -25,7 +25,7 @@ export const useAuthStore = defineStore({
         logout(){
             this.token = null 
             quitSession()
-            this.$router.push('/');
+            this.$router.push('/')
         },
     },
 })

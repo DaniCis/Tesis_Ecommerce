@@ -76,10 +76,10 @@
                 </router-link>
               </div>
               <div class="ml-4 flow-root lg:ml-6">
-                <a href="#" class="group -m-2 p-2 flex items-center">
+                <div class="group -m-2 p-2 flex items-center">
                   <ShoppingCartIcon @click="openCart" class="flex-shrink-0 h-7 w-7 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  <Badge value="0" severity="info" class="mr-2"></Badge>
-                </a>
+                  <Badge :value="cantidad" severity="info" class="mr-2" style='height:24px; min-width:24px'></Badge>
+                </div>
               </div>
             </div>
           </div>
@@ -117,7 +117,14 @@
     TransitionRoot,
   } from '@headlessui/vue'
   import { MenuIcon, SearchIcon, ShoppingCartIcon, XIcon, UserIcon } from '@heroicons/vue/outline'
+  import { initializeApp } from 'firebase/app'
+  import { getDatabase , onValue} from 'firebase/database'
+  import { getAccessToken, getUser } from '../services/auth';
+  import config from '../services/config'
   import Cart from './cart.vue'
+
+  var app = initializeApp(config);
+  var db = getDatabase(app)
 
   const navigation = {
     pages: [
@@ -153,14 +160,40 @@
       return{
         abrir:false,
         displayConfirmation: false,
+        cantidad:null,
       }
     },
+
     computed:{
       ...mapState(useAuthStore, ["isLoggedIn"]),
       ...mapState(useAuthStore, ["userName"]),
        ...mapActions(useAuthStore, ["logout"])
     },
+    mounted(){
+      //this.getNumber()
+    },
+
     methods:{
+      getNumber(){
+        var contenido = []
+        var ident =''
+        if( getAccessToken() == null)
+          ident = localStorage.getItem('ID')
+        else
+          ident = getUser()
+        var carritoRef = ref(db, "carrito/"+ ident)
+        onValue(carritoRef, (snapshot) => {
+            snapshot.forEach(function (childSnapshot) {
+            var value = childSnapshot.val()
+            contenido.push(value)
+          })
+          if(contenido.length>=0)
+            this.cantidad = contenido.length
+          else
+            this.cantidad = 0
+        })
+      },
+
       openCart(){
         this.abrir = true
       },

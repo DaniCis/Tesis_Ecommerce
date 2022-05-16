@@ -23,7 +23,15 @@
                   <div class="mt-7">
                     <div class="flow-root">
                       <ul role="list" class="-my-6 divide-y divide-gray-200">
-                        <li v-for="product in productos" :key="product.id" class="flex py-5">
+                        <li v-if="productos.length==0">
+                          <div class="mt-8 flex justify-center text-center ">
+                            <img src='https://www.metro-markets.com/plugins/user/images/emptycart.png'>
+                          </div>
+                          <div class=" flex justify-center text-center font-medium text-gray-900">
+                            <h2>Carrito Vacío</h2>
+                          </div>
+                        </li>
+                        <li v-else v-for="product in productos" :key="product.id" class="flex py-5">
                           <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                             <img :src="`http://10.147.17.173:5002/productos/images_small/${product.id}/${product.imagen}`" :alt='product.nombre' class="h-full w-full object-cover object-center" />
                           </div>
@@ -35,7 +43,7 @@
                             <div class="flex flex-1 items-end justify-between text-sm">
                               <p class="text-gray-500">Cant. {{ product.cantidad }}</p>
                               <div class="flex">
-                                <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Quitar</button>
+                                <button type="button" @click='quitarElemento(product.key)' class="font-medium text-indigo-600 hover:text-indigo-500">Quitar</button>
                               </div>
                             </div>
                           </div>
@@ -45,16 +53,23 @@
                   </div>
                 </div>
                 <div class="border-t border-gray-200 py-4 px-4 sm:px-6">
-                  <div class="flex justify-between text-base font-medium text-gray-900">
-                    <p>Subtotal</p>
-                    <p>$122.00</p>
+                  <div v-if="productos.length==0">
+                    <div class="mt-4 mb-6 flex justify-center text-center text-sm text-gray-500">
+                      <button type="button" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700" @click="closeCart" >Seguir Comprando</button>
+                    </div>
                   </div>
-                  <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                  <div class="mt-5" @click="closeCart">
-                    <router-link to='/checkout' class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</router-link>
-                  </div>
-                  <div class="mt-4 flex justify-center text-center text-sm text-gray-500">
-                    <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="closeCart" >Seguir Comprando<span aria-hidden="true"> &rarr;</span></button>
+                  <div v-else>
+                     <div class="flex justify-between text-base font-medium text-gray-900">
+                      <p>Subtotal</p>
+                      <p>$122.00</p>
+                    </div>
+                    <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                    <div class="mt-5">
+                      <router-link to='/checkout' class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</router-link>
+                    </div>
+                    <div class="mt-4 flex justify-center text-center text-sm text-gray-500">
+                      <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="closeCart" >Seguir Comprando<span aria-hidden="true"> &rarr;</span></button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -70,7 +85,7 @@
   import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
   import { XIcon } from '@heroicons/vue/outline'
   import { initializeApp } from 'firebase/app'
-  import { getDatabase, ref , onValue} from 'firebase/database'
+  import { getDatabase, ref , onValue, remove} from 'firebase/database'
   import { getAccessToken, getUser } from '../services/auth';
   import config from '../services/config'
 
@@ -102,10 +117,6 @@
     },
     
     methods:{
-      closeCart(){
-        this.$emit('getCartValue',this.abrir) 
-      },
-      
       cargarCarrito(){
         var contenido = []
         var ident =''
@@ -115,17 +126,22 @@
           ident = getUser()
         var carritoRef = ref(db, "carrito/"+ ident)
         onValue(carritoRef, (snapshot) => {
-            snapshot.forEach(function (childSnapshot) {
+          snapshot.forEach(function (childSnapshot) {
             var value = childSnapshot.val()
-            contenido.push(value)
+            var producto ={
+              key : childSnapshot.key,
+              id: value.id,
+              cantidad: value.cantidad
+            }
+            contenido.push(producto)
           })
           for (let i = 0; i < contenido.length; i++) {
-            this.getDetalleProducto(contenido[i].id,contenido[i].cantidad)
+            this.getDetalleProducto(contenido[i].id,contenido[i].cantidad,contenido[i].key)
           }
         })
       },
 
-      async getDetalleProducto(id,cantidad){
+      async getDetalleProducto(id,cantidad,key){
         await this.axios.get(`http://10.147.17.173:5002/detalleProducto/venta/findById/${id}`
         ).then(response => {
           var info ={
@@ -134,12 +150,31 @@
             precio : response.data.pvp_item.slice(1)*cantidad,
             imagen : response.data.imagen_producto[0],
             cantidad : cantidad,
+            key:key
           }
           this.productos.push(info)
         })
         .catch(e => {
           this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
         })
+      },
+
+      calcularSubtotal(){
+
+      },
+
+      quitarElemento(key){
+        var ident =''
+        if( getAccessToken() == null)
+          ident = localStorage.getItem('ID')
+        else
+          ident = getUser()
+        var carritoRef = ref(db, "carrito/"+ ident +'/'+key)
+        remove(carritoRef)
+      },
+
+      closeCart(){
+        this.$emit('getCartValue',this.abrir) 
       },
     }
   }

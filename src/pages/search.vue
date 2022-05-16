@@ -21,11 +21,11 @@
                     <i class="pi pi-search" />
                     <InputText type="text" placeholder="Buscar" style="width:270px" />
                   </span>  
-                  <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-t border-gray-200 px-4 py-4" v-slot="{ open }">
+                  <Disclosure as="div" class="border-t border-gray-200 px-4 py-4" v-slot="{ open }">
                     <h3 class="-mx-2 -my-3 flow-root">
                       <DisclosureButton class="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
                         <span class="font-medium text-gray-900">
-                          {{ section.name }}
+                          Marca
                         </span>
                         <span class="ml-6 flex items-center">
                           <PlusSmIcon v-if="!open" class="h-8 w-8" aria-hidden="true" />
@@ -35,9 +35,9 @@
                     </h3>
                     <DisclosurePanel class="pt-6">
                       <div class="space-y-6">
-                        <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
-                          <input :id="`filter-mobile-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value" type="checkbox" :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
-                          <label :for="`filter-mobile-${section.id}-${optionIdx}`" class="ml-3 min-w-0 flex-1 text-gray-500">
+                        <div v-for="(option, optionIdx) in marcas" :key="option.value" class="flex items-center">
+                          <input :id="optionIdx" :value="option.value" type="checkbox" :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
+                          <label :for="optionIdx" class="ml-3 min-w-0 flex-1 text-gray-500">
                             {{ option.label }}
                           </label>
                         </div>
@@ -69,11 +69,11 @@
                 <i class="pi pi-search" />
                 <InputText type="text" placeholder="Buscar" style="width:260px" />
               </span>        
-              <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-b border-gray-200 py-6" v-slot="{ open }">
+              <Disclosure as="div"  class="border-b border-gray-200 py-6" v-slot="{ open }">
                 <h3 class="-my-3 flow-root">
                   <DisclosureButton class="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
                     <span class="font-medium text-gray-900">
-                      {{ section.name }}
+                      Marca
                     </span>
                     <span class="ml-6 flex items-center">
                       <PlusSmIcon v-if="!open" class="h-8 w-8" aria-hidden="true" />
@@ -83,9 +83,9 @@
                 </h3>
                 <DisclosurePanel class="pt-6">
                   <div class="space-y-4">
-                    <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
-                      <input :id="`filter-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value" type="checkbox" :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
-                      <label :for="`filter-${section.id}-${optionIdx}`" class="ml-3 text-sm text-gray-600">
+                    <div v-for="(option, optionIdx) in marcas" :key="option.value" class="flex items-center">
+                      <input :id="optionIdx" :value="option.value" type="checkbox" :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
+                      <label :for="optionIdx" class="ml-3 text-sm text-gray-600">
                         {{ option.label }}
                       </label>
                     </div>
@@ -174,20 +174,6 @@ import { XIcon } from '@heroicons/vue/outline'
 import {  FilterIcon, MinusSmIcon, PlusSmIcon, } from '@heroicons/vue/solid'
 import Details from '../components/details.vue'
 
-const filters = [
-  {
-    id: 'marca',
-    name: 'Marca',
-    options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
-    ],
-  },
-]
 
 export default {
   components: {
@@ -211,7 +197,6 @@ export default {
   setup() {
     const mobileFiltersOpen = ref(false)
     return {
-      filters,
       mobileFiltersOpen,
     }
   },
@@ -219,19 +204,21 @@ export default {
     return { 
       open:false,
       products: [],
+      marcas:[],
       layout: 'grid',
       id:null,
       sortKey: null,
       sortOrder: null,
       sortField: null,
       sortOptions: [
-          {label: 'Más alto a bajo', value: '!pvp_item'},
-          {label: 'Más bajo a alto', value: 'pvp_item'},
+        {label: 'Más alto a bajo', value: '!pvp_item'},
+        {label: 'Más bajo a alto', value: 'pvp_item'},
       ]
     }
   },
   mounted() {
     this.getProducts()
+    this.getMarcas()
   },
   methods: {
     async getProducts(){
@@ -243,6 +230,27 @@ export default {
         this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
       })
     },
+
+    async getMarcas(){
+      var listado =[]
+      await this.axios.get('http://10.147.17.173:5002/marcasProductos'
+      ).then(response => {
+        if(response.data !=null){
+          listado = response.data
+          for (let i = 0; i < listado.length; i++) {
+              var marca = {
+              value: listado[i].marca_producto,
+              label: listado[i].marca_producto,
+              checked:false
+            }
+            this.marcas.push(marca)
+          }
+        }
+      }).catch (e=> {
+        this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
+      })
+    },
+
     openModal(id){
 			this.id = id
 			this.open = true
@@ -258,14 +266,14 @@ export default {
       console.log(value)
       console.log(sortValue)
       if (value.indexOf('!') === 0) {
-          this.sortOrder = -1;
-          this.sortField = value.substring(1, value.length);
-          this.sortKey = sortValue;
+        this.sortOrder = -1;
+        this.sortField = value.substring(1, value.length);
+        this.sortKey = sortValue;
       }
       else {
-          this.sortOrder = 1;
-          this.sortField = value;
-          this.sortKey = sortValue;
+        this.sortOrder = 1;
+        this.sortField = value;
+        this.sortKey = sortValue;
       }
   }
   }
@@ -273,127 +281,133 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .p-selectbutton{
+    box-shadow: none;
+  }
 
-.p-selectbutton{
-	box-shadow: none;
-}
-.p-dropdown {
-    width: 14rem;
-    font-weight: normal;
-}
-.product-name {
-	font-size: 1rem;
-	font-weight: 700;
-	text-transform:capitalize;
-}
-.product-category-icon {
-	vertical-align: middle;
-	margin-right: .5rem;
-}
-.product-category {
-	font-weight: 600;
-	vertical-align: middle;
-}
-::v-deep(.product-list-item) {
-	display: flex;
-	align-items: center;
-	padding: 1rem;
-	width: 100%;
-	img {
-		width: 150px;
-		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-		margin-right: 2rem;
-	}
-	.product-list-detail {
-		flex: 1 1 0;
-	}
-	.p-rating {
-		margin: 0 0 .5rem 0;
-	}
-	.product-price {
-		font-size: 1.3rem;
-		font-weight: 600;
-		margin-bottom: .5rem;
-		align-self: flex-end;
-	}
-	.product-list-action {
-		display: flex;
-		flex-direction: column;
-	}
-	.p-button {
-		margin-bottom: .5rem;
-	}
-}
-::v-deep(.product-grid-item) {
-	margin: .5rem;
-	border: 1px solid var(--surface-border);
-	.product-grid-item-top,
-	.product-grid-item-bottom {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-	img {
-		width: 60%;
-		box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-		margin: 1.5rem 0;
-		display: inline;
-	}
-	.product-grid-item-content {
-		text-align: center;
-	}
-	.product-price {
-		font-size: 1.3rem;
-		font-weight: 600;
-	}
-}
-@media screen and (max-width: 576px) {
-	.product-list-item {
-		flex-direction: column;
-		align-items: center;
-		img {
-			width: 50%;
-			margin: 2rem 0;
-		}
-		.product-list-detail {
-			text-align: center;
-		}
-		.product-price {
-			align-self: center;
-		}
-		.product-list-action {
-			display: flex;
-			flex-direction: column;
-		}
-		.product-list-action {
-			margin-top: 2rem;
-			flex-direction: row;
-			justify-content: space-between;
-			align-items: center;
-			width: 100%;
-		}
-	}
-}
+  .p-dropdown {
+      width: 14rem;
+      font-weight: normal;
+  }
 
-.product-badge {
-	border-radius: 2px;
-	padding: .25em .5rem;
-	text-transform: uppercase;
-	font-weight: 700;
-	font-size: 12px;
-	letter-spacing: .3px;
-}
+  .product-name {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform:capitalize;
+  }
 
-.product-badge.status-instock {
-	background: #87e48a;
-	color: #256029;
-	width:82px;
-}
+  .product-category-icon {
+    vertical-align: middle;
+    margin-right: .5rem;
+  }
 
-.layout-content .card {
+  .product-category {
+    font-weight: 600;
+    vertical-align: middle;
+  }
+
+  ::v-deep(.product-list-item) {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    width: 100%;
+    img {
+      width: 150px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      margin-right: 2rem;
+    }
+    .product-list-detail {
+      flex: 1 1 0;
+    }
+    .p-rating {
+      margin: 0 0 .5rem 0;
+    }
+    .product-price {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: .5rem;
+      align-self: flex-end;
+    }
+    .product-list-action {
+      display: flex;
+      flex-direction: column;
+    }
+    .p-button {
+      margin-bottom: .5rem;
+    }
+  }
+
+  ::v-deep(.product-grid-item) {
+    margin: .5rem;
+    border: 1px solid var(--surface-border);
+    .product-grid-item-top,
+    .product-grid-item-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    img {
+      width: 60%;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      margin: 1.5rem 0;
+      display: inline;
+    }
+    .product-grid-item-content {
+      text-align: center;
+    }
+    .product-price {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+  }
+
+  @media screen and (max-width: 576px) {
+    .product-list-item {
+      flex-direction: column;
+      align-items: center;
+      img {
+        width: 50%;
+        margin: 2rem 0;
+      }
+      .product-list-detail {
+        text-align: center;
+      }
+      .product-price {
+        align-self: center;
+      }
+      .product-list-action {
+        display: flex;
+        flex-direction: column;
+      }
+      .product-list-action {
+        margin-top: 2rem;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+    }
+  }
+
+  .product-badge {
+    border-radius: 2px;
+    padding: .25em .5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+  }
+
+  .product-badge.status-instock {
+    background: #87e48a;
+    color: #256029;
+    width:82px;
+  }
+
+  .layout-content .card {
     background:#fff;
     padding: 1.5rem;
     border-radius: 10px;
     margin-bottom: 2rem;
-} 
+  } 
 </style>

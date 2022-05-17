@@ -85,14 +85,19 @@
   import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
   import { XIcon } from '@heroicons/vue/outline'
   import { initializeApp } from 'firebase/app'
-  import { getDatabase, ref , get, remove, onValue, child} from 'firebase/database'
+  import { getDatabase, ref , get, remove} from 'firebase/database'
   import { getAccessToken, getUser } from '../services/auth';
+  import { useCartStore } from '../stores/carrito'
   import config from '../services/config'
 
   var app = initializeApp(config);
   var db = getDatabase(app)
 
   export default {
+    setup() {
+      const cartStore = useCartStore()
+      return { cartStore }
+    },
     components: {
       Dialog,
       DialogOverlay,
@@ -126,7 +131,6 @@
         else
           ident = getUser()
         var carritoRef = ref(db, "carrito/"+ ident)
-
         get(carritoRef).then((snapshot) => {
           if (snapshot.exists()) {
             snapshot.forEach(function (childSnapshot) {  
@@ -144,7 +148,8 @@
           } else {
             this.productos = null
           }
-        }) 
+        })
+        this.cartStore.getNumber()
       },
 
       async getDetalleProducto(id,cantidad,key){

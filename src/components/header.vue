@@ -78,7 +78,7 @@
               <div class="ml-4 flow-root lg:ml-6">
                 <div class="group -m-2 p-2 flex items-center">
                   <ShoppingCartIcon @click="openCart" class="flex-shrink-0 h-7 w-7 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  <Badge value="0" severity="info" class="mr-2" style='height:24px; min-width:24px'></Badge>
+                  <Badge :value="numberItems" severity="info" class="mr-2" style='height:24px; min-width:24px'></Badge>
                 </div>
               </div>
             </div>
@@ -104,6 +104,7 @@
 
 <script>
   import { useAuthStore } from '../stores/auth'
+  import { useCartStore } from '../stores/carrito'
   import { mapState, mapActions } from 'pinia'
   import { ref as ref2} from 'vue'
   import {
@@ -145,9 +146,11 @@
     },
     setup() {
       const open = ref2(false)
+      const cartStore = useCartStore()
       return {
         navigation,
         open,
+        cartStore
       }
     },
     data(){
@@ -160,7 +163,12 @@
     computed:{
       ...mapState(useAuthStore, ["isLoggedIn"]),
       ...mapState(useAuthStore, ["userName"]),
-       ...mapActions(useAuthStore, ["logout"])
+      ...mapActions(useAuthStore, ["logout"]),
+      ...mapState(useCartStore, ["numberItems"]) 
+    },
+    
+    mounted(){  
+      this.cartStore.getNumber()
     },
 
     methods:{

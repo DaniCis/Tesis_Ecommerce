@@ -65,16 +65,20 @@
 
 <script>
 import Details from './details.vue'
+import config from '../services/config'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, ref , push} from 'firebase/database'
-import config from '../services/config'
 import { getAccessToken, getUser } from '../services/auth';
+import { useCartStore } from '../stores/carrito'
 
 var app = initializeApp(config);
 var db = getDatabase(app)
 
 export default {
-
+	setup() {
+		const cartStore = useCartStore()
+		return { cartStore }
+	},
 	components:{Details},
     data() {
         return { 
@@ -117,7 +121,9 @@ export default {
 				cantidad:1,
 				id: id
 			})
-			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000});
+			this.cartStore.getNumber()
+			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
+			
 		},
 
 		openModal(id){

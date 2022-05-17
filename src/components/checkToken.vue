@@ -21,6 +21,7 @@
                 displayConfirmation: false,
             }
         },
+        
         async mounted(){
             var decodedToken = getDecoded()
             if (decodedToken != null){

@@ -78,7 +78,7 @@
               <div class="ml-4 flow-root lg:ml-6">
                 <div class="group -m-2 p-2 flex items-center">
                   <ShoppingCartIcon @click="openCart" class="flex-shrink-0 h-7 w-7 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
-                  <Badge :value="cantidad" severity="info" class="mr-2" style='height:24px; min-width:24px'></Badge>
+                  <Badge value="0" severity="info" class="mr-2" style='height:24px; min-width:24px'></Badge>
                 </div>
               </div>
             </div>
@@ -98,14 +98,14 @@
       </template>
     </Dialog2>
 
-    <Cart :abrir='this.abrir' @getCartValue="getValue($event)" />
+    <Cart v-if='abrir' :abrir='this.abrir' @getCartValue="getValue($event)" />
   </div>
 </template>
 
 <script>
   import { useAuthStore } from '../stores/auth'
   import { mapState, mapActions } from 'pinia'
-  import { ref } from 'vue'
+  import { ref as ref2} from 'vue'
   import {
     Dialog,
     DialogOverlay,
@@ -117,14 +117,8 @@
     TransitionRoot,
   } from '@headlessui/vue'
   import { MenuIcon, SearchIcon, ShoppingCartIcon, XIcon, UserIcon } from '@heroicons/vue/outline'
-  import { initializeApp } from 'firebase/app'
-  import { getDatabase , onValue} from 'firebase/database'
-  import { getAccessToken, getUser } from '../services/auth';
-  import config from '../services/config'
   import Cart from './cart.vue'
 
-  var app = initializeApp(config);
-  var db = getDatabase(app)
 
   const navigation = {
     pages: [
@@ -150,7 +144,7 @@
       Cart
     },
     setup() {
-      const open = ref(false)
+      const open = ref2(false)
       return {
         navigation,
         open,
@@ -160,7 +154,6 @@
       return{
         abrir:false,
         displayConfirmation: false,
-        cantidad:null,
       }
     },
 
@@ -169,31 +162,8 @@
       ...mapState(useAuthStore, ["userName"]),
        ...mapActions(useAuthStore, ["logout"])
     },
-    mounted(){
-      //this.getNumber()
-    },
 
     methods:{
-      getNumber(){
-        var contenido = []
-        var ident =''
-        if( getAccessToken() == null)
-          ident = localStorage.getItem('ID')
-        else
-          ident = getUser()
-        var carritoRef = ref(db, "carrito/"+ ident)
-        onValue(carritoRef, (snapshot) => {
-            snapshot.forEach(function (childSnapshot) {
-            var value = childSnapshot.val()
-            contenido.push(value)
-          })
-          if(contenido.length>=0)
-            this.cantidad = contenido.length
-          else
-            this.cantidad = 0
-        })
-      },
-
       openCart(){
         this.abrir = true
       },

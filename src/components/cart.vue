@@ -23,7 +23,7 @@
                   <div class="mt-7">
                     <div class="flow-root">
                       <ul role="list" class="-my-6 divide-y divide-gray-200">
-                        <li v-if="productos.length==0">
+                        <li v-if="productos== null">
                           <div class="mt-8 flex justify-center text-center ">
                             <img src='https://www.metro-markets.com/plugins/user/images/emptycart.png'>
                           </div>
@@ -53,7 +53,7 @@
                   </div>
                 </div>
                 <div class="border-t border-gray-200 py-4 px-4 sm:px-6">
-                  <div v-if="productos.length==0">
+                  <div v-if="productos==null">
                     <div class="mt-4 mb-6 flex justify-center text-center text-sm text-gray-500">
                       <button type="button" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700" @click="closeCart" >Seguir Comprando</button>
                     </div>
@@ -85,7 +85,7 @@
   import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
   import { XIcon } from '@heroicons/vue/outline'
   import { initializeApp } from 'firebase/app'
-  import { getDatabase, ref , onValue, remove} from 'firebase/database'
+  import { getDatabase, ref , get, remove, onValue, child} from 'firebase/database'
   import { getAccessToken, getUser } from '../services/auth';
   import config from '../services/config'
 
@@ -112,12 +112,13 @@
       abrir:Boolean,
     },
 
-    mounted(){
+    created(){
       this.cargarCarrito()
     },
     
     methods:{
       cargarCarrito(){
+        this.productos=[]
         var contenido = []
         var ident =''
         if( getAccessToken() == null)
@@ -125,20 +126,25 @@
         else
           ident = getUser()
         var carritoRef = ref(db, "carrito/"+ ident)
-        onValue(carritoRef, (snapshot) => {
-          snapshot.forEach(function (childSnapshot) {
-            var value = childSnapshot.val()
-            var producto ={
-              key : childSnapshot.key,
-              id: value.id,
-              cantidad: value.cantidad
+
+        get(carritoRef).then((snapshot) => {
+          if (snapshot.exists()) {
+            snapshot.forEach(function (childSnapshot) {  
+              var value = childSnapshot.val()
+              var producto ={
+                key : childSnapshot.key,
+                id: value.id,
+                cantidad: value.cantidad
+              }
+              contenido.push(producto)
+            })
+            for (let i = 0; i < contenido.length; i++) {
+              this.getDetalleProducto(contenido[i].id,contenido[i].cantidad,contenido[i].key)
             }
-            contenido.push(producto)
-          })
-          for (let i = 0; i < contenido.length; i++) {
-            this.getDetalleProducto(contenido[i].id,contenido[i].cantidad,contenido[i].key)
+          } else {
+            this.productos = null
           }
-        })
+        }) 
       },
 
       async getDetalleProducto(id,cantidad,key){
@@ -171,6 +177,7 @@
           ident = getUser()
         var carritoRef = ref(db, "carrito/"+ ident +'/'+key)
         remove(carritoRef)
+        this.cargarCarrito()
       },
 
       closeCart(){

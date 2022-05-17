@@ -13,7 +13,7 @@
                     <button type="button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-500 sm:top-8 sm:right-6 md:top-6 md:right-6 lg:top-8 lg:right-8" @click="closeModal">
                         <XIcon class="h-8 w-8" aria-hidden="true" />
                     </button>
-                    <div class="w-full grid" v-if="stock ==null">
+                    <div class="w-full grid" v-if="stock == null">
                         <div class='col-12 md:col-6' >
                             <Skeleton class="mb-2" width="100%" height="18rem"/>
                         </div>

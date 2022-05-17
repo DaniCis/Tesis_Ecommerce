@@ -23,14 +23,17 @@
     },
 
     created(){
-      this.crearId()
+      this.crearSessionID()
     },
 
     methods:{
-      crearId(){
+      crearSessionID(){
         const id = uuidv4()
-        if(!localStorage.getItem('ID'))
+        const exp = Date.now() + (3600 * 1000 * 24)
+        if(!localStorage.getItem('ID')){
           localStorage.setItem('ID',id)
+          localStorage.setItem('ID_exp',exp)
+        }
       },
     }
     

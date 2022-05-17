@@ -107,8 +107,9 @@ export default {
 
 		addToCart(id){
 			var ident =''
-			if( getAccessToken() == null)
+			if( getAccessToken() == null){
 				ident = localStorage.getItem('ID')
+			}
 			else
 				ident = getUser()
 			var carritoUser = ref(db, 'carrito/'+ ident)

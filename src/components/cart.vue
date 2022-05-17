@@ -61,7 +61,7 @@
                   <div v-else>
                      <div class="flex justify-between text-base font-medium text-gray-900">
                       <p>Subtotal</p>
-                      <p>$122.00</p>
+                      <p>${{subtotal}}</p>
                     </div>
                     <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                     <div class="mt-5">
@@ -109,7 +109,9 @@
  
     data(){
       return{
-        productos:[]
+        productos:[],
+        precios:[],
+        subtotal:null,
       }
     },
 
@@ -158,20 +160,33 @@
           var info ={
             id:id,
             nombre :response.data.nombre_producto,
-            precio : response.data.pvp_item.slice(1)*cantidad,
+            precio : (response.data.pvp_item.slice(1)*cantidad).toFixed(2),
             imagen : response.data.imagen_producto[0],
             cantidad : cantidad,
             key:key
           }
           this.productos.push(info)
+          this.agregarPrecios()
+          this.calcularSubtotal()
         })
         .catch(e => {
           this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
         })
       },
+      
+      agregarPrecios(){
+        this.precios=[]
+        for (let i = 0; i < this.productos.length; i++) {
+          const precio = this.productos[i].precio
+          this.precios.push(precio)
+        }
+      },
 
       calcularSubtotal(){
-
+        this.subtotal = null
+        for (var i = 0; i < this.precios.length; i++) 
+          this.subtotal += parseFloat(this.precios[i])       
+        this.subtotal = this.subtotal.toFixed(2)
       },
 
       quitarElemento(key){

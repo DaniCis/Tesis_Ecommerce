@@ -36,7 +36,6 @@ export const useCartStore = defineStore({
                 } else {
                     this.cantidad = 0
                 }
-                console.log(this.cantidad)
             }) 
         },
     },

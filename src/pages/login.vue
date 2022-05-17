@@ -36,18 +36,27 @@
     import { required } from "@vuelidate/validators"
     import { useVuelidate } from "@vuelidate/core"
     import { useAuthStore } from '../stores/auth'
+    import { useCartStore } from '../stores/carrito'
+    import { initializeApp } from 'firebase/app'
+    import { getDatabase, ref , get,push, remove} from 'firebase/database'
+    import config from '../services/config'
+
+    var app = initializeApp(config);
+    var db = getDatabase(app)
 
     export default {
         setup() {
             const v$ = useVuelidate()
             const authStore = useAuthStore()
-            return { v$, authStore }
+            const cartStore = useCartStore()
+            return { v$, authStore , cartStore }
         },
         data(){
             return{
                 user:'',
                 password:'',
                 submitted: false,
+                productos:[],
             };
         },
         validations() {
@@ -66,6 +75,7 @@
             },
             async login() {
                 const formData = new FormData();
+                const user = this.user.trim()
                 formData.append('username',this.user.trim());
                 formData.append('password',this.password.trim());
                 await this.axios.post(`http://10.147.17.173:5005/login`, formData
@@ -75,11 +85,49 @@
                     localStorage.setItem('token',response.data.access_token)
                     this.authStore.setToken(response.data.access_token)
                     this.authStore.setUser()
+                    this.verificarCarrito(user)
                     this.$router.push('/');
                 }
                 }).catch (e=> { 
                     this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail + '. Vuelva a ingresar', life: 3000});
                 })
+            },
+
+            verificarCarrito(username){
+                var carritoAnterior =[]
+                var ident = localStorage.getItem('ID')
+                var carritoOld = ref(db, "carrito/"+ ident)
+                get(carritoOld).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        snapshot.forEach(function (childSnapshot) {  
+                            var value = childSnapshot.val()
+                            var producto ={
+                                id: value.id,
+                                cantidad: value.cantidad
+                            }
+                            carritoAnterior.push(producto)
+                        })
+                        var carritoNew = ref(db, "carrito/"+ username)
+                        for (let i = 0; i < carritoAnterior.length; i++) {
+                            push(carritoNew,{
+                                cantidad: carritoAnterior[i].cantidad,
+                                id: carritoAnterior[i].id
+                            })
+                        }
+                        this.quitarElemento()
+                        localStorage.removeItem('ID')
+                    }else{
+                        this.productos = []
+                    }
+                    this.cartStore.getNumber()
+                })
+                
+            },
+
+            quitarElemento(){ 
+                var ident = localStorage.getItem('ID')
+                var carritoRef = ref(db, "carrito/"+ ident)
+                remove(carritoRef)
             },
 
             resetForm() {

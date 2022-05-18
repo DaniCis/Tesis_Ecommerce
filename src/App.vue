@@ -27,6 +27,7 @@
     },
 
     methods:{
+      /*verificar si hay un token y si no esta expirado. Si esta expirado cerrar sesion*/
       crearSessionID(){
         const id = uuidv4()
         const exp = Date.now() + (3600 * 1000 * 24)

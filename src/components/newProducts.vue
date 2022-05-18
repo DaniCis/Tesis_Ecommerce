@@ -67,7 +67,7 @@
 import Details from './details.vue'
 import config from '../services/config'
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref , push} from 'firebase/database'
+import { getDatabase, ref , push, update, get} from 'firebase/database'
 import { getAccessToken, getUser } from '../services/auth';
 import { useCartStore } from '../stores/carrito'
 
@@ -82,7 +82,7 @@ export default {
 	components:{Details},
     data() {
         return { 
-			open:false,
+			open:false, 
             products: [],
             layout: 'grid',
 			id:null,
@@ -104,6 +104,7 @@ export default {
             ).then(response => {
                 if(response.data !=null)
                     this.products = response.data
+				console.log(this.products)
             }).catch (e=> {
 				this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
             })
@@ -111,19 +112,50 @@ export default {
 
 		addToCart(id){
 			var ident =''
-			if( getAccessToken() == null){
+			if( getAccessToken() == null)
 				ident = localStorage.getItem('ID')
-			}
 			else
 				ident = getUser()
 			var carritoUser = ref(db, 'carrito/'+ ident)
-			push(carritoUser,{
-				cantidad:1,
-				id: id
-			})
+
+			var promesa = this.verificarExistencia(carritoUser, id)
+			promesa.then(
+				res => {
+					if(res){
+						var articuloRef= ref(db, 'carrito/'+ ident + '/' +res.key)
+						update(articuloRef,{
+							cantidad : res.cantidad+1
+						})
+					}else{
+						push(carritoUser,{
+							cantidad:1,
+							id: id
+						})
+					}
+				}
+			)
 			this.cartStore.getNumber()
 			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
-			
+		},
+		
+		verificarExistencia(ref, id){
+			var productosExistentes = []
+			const valor = get(ref).then((snapshot) => {
+				snapshot.forEach(function (childSnapshot) {  
+					var value = childSnapshot.val()
+					var id ={
+						key : childSnapshot.key,
+						id: value.id,
+						cantidad: value.cantidad
+					}
+					productosExistentes.push(id)
+				})
+				for (let i = 0; i < productosExistentes.length; i++) {
+					if(id == productosExistentes[i].id)
+						return productosExistentes[i]
+				}
+			})
+			return valor
 		},
 
 		openModal(id){

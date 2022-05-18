@@ -8,7 +8,7 @@ import Checkout from './pages/checkout.vue'
 import Products from './pages/products.vue'
 
 const routes = [
-    { path: "/", component:Principal },
+    { name:"main",path: "/", component:Principal },
     { path: "/login", component: Login },
     { path: "/register", component:Register },
     { path: "/search", component:Search},

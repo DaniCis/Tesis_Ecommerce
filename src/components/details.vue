@@ -80,7 +80,7 @@
 	} from '@headlessui/vue'
 	import { XIcon } from '@heroicons/vue/outline'
     import { initializeApp } from 'firebase/app'
-    import { getDatabase, ref, push} from 'firebase/database'
+    import { getDatabase, ref, push, get, update} from 'firebase/database'
     import { getAccessToken, getUser } from '../services/auth'
     import { useCartStore } from '../stores/carrito'
     import config from '../services/config'
@@ -144,17 +144,49 @@ export default {
 				ident = localStorage.getItem('ID')
 			else
 				ident = getUser()
-            console.log(ident)
 			var carritoUser = ref(db, 'carrito/'+ ident)
-			push(carritoUser,{
-				cantidad:cantidad,
-				id: this.id
-			})
+
+            var promesa = this.verificarExistencia(carritoUser, id)
+			promesa.then(
+				res => {
+					if(res){
+						var articuloRef= ref(db, 'carrito/'+ ident + '/' +res.key)
+						update(articuloRef,{
+							cantidad : res.cantidad+1
+						})
+					}else{
+						push(carritoUser,{
+                            cantidad:cantidad,
+                            id: this.id
+                        })
+					}
+				}
+			)
             this.cartStore.getNumber()
 			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000});
             setTimeout(()=>{
                 this.closeModal()
             }, 3000)
+		},
+
+        verificarExistencia(ref, id){
+			var productosExistentes = []
+			const valor = get(ref).then((snapshot) => {
+				snapshot.forEach(function (childSnapshot) {  
+					var value = childSnapshot.val()
+					var id ={
+						key : childSnapshot.key,
+						id: value.id,
+						cantidad: value.cantidad
+					}
+					productosExistentes.push(id)
+				})
+				for (let i = 0; i < productosExistentes.length; i++) {
+					if(id == productosExistentes[i].id)
+						return productosExistentes[i]
+				}
+			})
+			return valor
 		},
 
         async getDetalleProducto(id){

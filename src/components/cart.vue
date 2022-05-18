@@ -132,7 +132,9 @@
           ident = localStorage.getItem('ID')
         else
           ident = getUser()
+
         var carritoRef = ref(db, "carrito/"+ ident)
+        
         get(carritoRef).then((snapshot) => {
           if (snapshot.exists()) {
             snapshot.forEach(function (childSnapshot) {  
@@ -144,6 +146,7 @@
               }
               contenido.push(producto)
             })
+            
             for (let i = 0; i < contenido.length; i++) {
               this.getDetalleProducto(contenido[i].id,contenido[i].cantidad,contenido[i].key)
             }

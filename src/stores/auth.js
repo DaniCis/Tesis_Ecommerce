@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import router from "../router"
 import { getUser, getAccessToken, quitSession } from '../services/auth';
 
 export const useAuthStore = defineStore({
@@ -25,7 +26,7 @@ export const useAuthStore = defineStore({
         logout(){
             this.token = null 
             quitSession()
-            this.$router.push('/')
+            router.push('/')
         },
     },
 })

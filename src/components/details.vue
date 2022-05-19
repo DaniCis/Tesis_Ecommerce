@@ -44,7 +44,7 @@
                                 <p class="text-2xl text-gray-900">{{precio}}</p>
                             </section>
                             <section aria-labelledby="options-heading" class="mt-4">
-                                <form @submit.prevent="addToCart(cantidad)">
+                                <form @submit.prevent="addToCart(cantidad, stock)">
                                     <div>
                                         <div>
                                             <label class="block text-500 font-medium mb-2">{{detalle}}</label>
@@ -138,7 +138,7 @@ export default {
             this.$emit('getModalValue',this.open) 
         },
 
-        addToCart(cantidad){
+        addToCart(cantidad, stock){
             var ident =''
 			if( getAccessToken() == null)
 				ident = localStorage.getItem('ID')
@@ -146,28 +146,37 @@ export default {
 				ident = getUser()
 			var carritoUser = ref(db, 'carrito/'+ ident)
 
-            var promesa = this.verificarExistencia(carritoUser, id)
+            var promesa = this.verificarExistencia(carritoUser, this.id)
 			promesa.then(
-				res => {
-					if(res){
-						var articuloRef= ref(db, 'carrito/'+ ident + '/' +res.key)
-						update(articuloRef,{
-							cantidad : res.cantidad+1
-						})
+				response => {
+					if(response){
+                        if(response.cantidad +1 <= stock){
+                            var articuloRef= ref(db, 'carrito/'+ ident + '/' + response.key)
+                            update(articuloRef,{
+                                cantidad : response.cantidad + 1
+                            })
+			                this.terminarCompra()
+                        }else{
+                            this.$toast.add({severity:'error', detail: 'Cantidad agregada fuera de stock', life: 3000})
+                        }
 					}else{
 						push(carritoUser,{
                             cantidad:cantidad,
                             id: this.id
                         })
+                        this.terminarCompra()
 					}
 				}
 			)
+		},
+
+        terminarCompra(){
             this.cartStore.getNumber()
-			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000});
+            this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
             setTimeout(()=>{
                 this.closeModal()
             }, 3000)
-		},
+        },
 
         verificarExistencia(ref, id){
 			var productosExistentes = []

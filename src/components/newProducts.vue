@@ -85,6 +85,7 @@ export default {
 			open:false, 
             products: [],
             layout: 'grid',
+			stock:null,
 			id:null,
             sortKey: null,
             sortOrder: null,
@@ -104,7 +105,8 @@ export default {
             ).then(response => {
                 if(response.data !=null)
                     this.products = response.data
-				console.log(this.products)
+
+				/* PONER DESCUENTOS*/
             }).catch (e=> {
 				this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
             })
@@ -118,24 +120,35 @@ export default {
 				ident = getUser()
 			var carritoUser = ref(db, 'carrito/'+ ident)
 
-			var promesa = this.verificarExistencia(carritoUser, id)
-			promesa.then(
-				res => {
-					if(res){
-						var articuloRef= ref(db, 'carrito/'+ ident + '/' +res.key)
-						update(articuloRef,{
-							cantidad : res.cantidad+1
-						})
-					}else{
-						push(carritoUser,{
-							cantidad:1,
-							id: id
-						})
-					}
+			const promesa2 = this.getDetalleProducto(id)
+			promesa2.then(
+				response => {
+					const stock = response
+					var promesa = this.verificarExistencia(carritoUser, id)
+					promesa.then(
+						result => {
+							if(result){
+								if(result.cantidad +1 <= stock){
+									var articuloRef = ref(db, 'carrito/'+ ident + '/' +result.key)
+									update(articuloRef,{
+										cantidad : result.cantidad + 1
+									})
+									this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
+								}else{
+									this.$toast.add({severity:'error', detail: 'Cantidad agregada fuera de stock', life: 3000})
+								}
+							}else{
+								push(carritoUser,{
+									cantidad:1,
+									id: id
+								})
+								this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
+							}
+						}
+					)
 				}
 			)
 			this.cartStore.getNumber()
-			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
 		},
 		
 		verificarExistencia(ref, id){
@@ -157,6 +170,18 @@ export default {
 			})
 			return valor
 		},
+
+		async getDetalleProducto(id){
+			const valor = await this.axios.get(`http://10.147.17.173:5002/detalleProducto/venta/findById/${id}`
+            ).then(response => {
+                const stock = response.data.cantidad_producto
+				return stock
+            })
+            .catch(e => {
+                this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
+            })
+			return valor
+        },
 
 		openModal(id){
 			this.id = id

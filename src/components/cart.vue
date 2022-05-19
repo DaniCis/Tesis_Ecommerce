@@ -40,8 +40,9 @@
                               <h3>{{ product.nombre }}</h3>
                               <p class="ml-4 text-gray-900">${{ product.precio }}</p>
                             </div>
+                            <p class="mt-1 text-gray-500">Cant.</p>
                             <div class="flex flex-1 items-end justify-between text-sm">
-                              <p class="text-gray-500">Cant. {{ product.cantidad }}</p>
+                              <InputNumber @blur="actualizarCantidad($event, product.key,product.stock)" class='mt-2' v-model='product.cantidad' :min="1" :max="product.stock" showButtons/>
                               <div class="flex">
                                 <button type="button" @click='quitarElemento(product.key)' class="font-medium text-indigo-600 hover:text-indigo-500">Quitar</button>
                               </div>
@@ -63,9 +64,8 @@
                       <p>Subtotal</p>
                       <p>${{subtotal}}</p>
                     </div>
-                    <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                     <div class="mt-5">
-                      <router-link to='/checkout' class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</router-link>
+                      <router-link to='/checkout' @click="closeCart" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</router-link>
                     </div>
                     <div class="mt-4 flex justify-center text-center text-sm text-gray-500">
                       <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="closeCart" >Seguir Comprando<span aria-hidden="true"> &rarr;</span></button>
@@ -85,7 +85,7 @@
   import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
   import { XIcon } from '@heroicons/vue/outline'
   import { initializeApp } from 'firebase/app'
-  import { getDatabase, ref , get, remove} from 'firebase/database'
+  import { getDatabase, ref , get, remove, update} from 'firebase/database'
   import { getAccessToken, getUser } from '../services/auth';
   import { useCartStore } from '../stores/carrito'
   import config from '../services/config'
@@ -157,6 +157,24 @@
         this.cartStore.getNumber()
       },
 
+      actualizarCantidad(event, key, stock){
+        var ident =''
+        var cant = parseInt(event.value)
+        if( getAccessToken() == null)
+          ident = localStorage.getItem('ID')
+        else
+          ident = getUser()
+        if(cant <= stock){
+          var articuloRef = ref(db, 'carrito/'+ ident + '/' + key)
+          update(articuloRef,{
+            cantidad : cant
+          })
+        }else{
+          this.$toast.add({severity:'error', summary:'Error', detail: 'Cantidad agregada fuera de stock', life: 3000})
+        }
+        this.cargarCarrito()
+      },
+
       async getDetalleProducto(id,cantidad,key){
         await this.axios.get(`http://10.147.17.173:5002/detalleProducto/venta/findById/${id}`
         ).then(response => {
@@ -165,8 +183,9 @@
             nombre :response.data.nombre_producto,
             precio : (response.data.pvp_item.slice(1)*cantidad).toFixed(2),
             imagen : response.data.imagen_producto[0],
+            stock: response.data.cantidad_producto,
             cantidad : cantidad,
-            key:key
+            key:key,
           }
           this.productos.push(info)
           this.agregarPrecios()
@@ -209,3 +228,13 @@
     }
   }
 </script>
+
+<style>
+  .p-inputnumber {
+    width: 2rem;
+    height: 40px;
+  }
+  .p-inputnumber-buttons-stacked .p-inputnumber-input {
+    width: 55px;
+  }
+</style>

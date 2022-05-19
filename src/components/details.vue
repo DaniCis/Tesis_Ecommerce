@@ -150,14 +150,14 @@ export default {
 			promesa.then(
 				response => {
 					if(response){
-                        if(response.cantidad +1 <= stock){
+                        if(cantidad <= stock){
                             var articuloRef= ref(db, 'carrito/'+ ident + '/' + response.key)
                             update(articuloRef,{
-                                cantidad : response.cantidad + 1
+                                cantidad : cantidad
                             })
 			                this.terminarCompra()
                         }else{
-                            this.$toast.add({severity:'error', detail: 'Cantidad agregada fuera de stock', life: 3000})
+                            this.$toast.add({severity:'error', summary:'Error', detail: 'Cantidad agregada fuera de stock', life: 3000})
                         }
 					}else{
 						push(carritoUser,{

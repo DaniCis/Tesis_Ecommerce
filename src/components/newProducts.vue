@@ -133,24 +133,28 @@ export default {
 									update(articuloRef,{
 										cantidad : result.cantidad + 1
 									})
-									this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
+									this.terminarCompra()
 								}else{
-									this.$toast.add({severity:'error', detail: 'Cantidad agregada fuera de stock', life: 3000})
+									this.$toast.add({severity:'error', summary:'Error', detail: 'Cantidad agregada fuera de stock', life: 3000})
 								}
 							}else{
 								push(carritoUser,{
 									cantidad:1,
 									id: id
 								})
-								this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
+								this.terminarCompra()
 							}
 						}
 					)
 				}
 			)
-			this.cartStore.getNumber()
 		},
-		
+
+		terminarCompra(){
+			this.cartStore.getNumber()
+			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
+		},
+
 		verificarExistencia(ref, id){
 			var productosExistentes = []
 			const valor = get(ref).then((snapshot) => {

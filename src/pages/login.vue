@@ -38,7 +38,7 @@
     import { useAuthStore } from '../stores/auth'
     import { useCartStore } from '../stores/carrito'
     import { initializeApp } from 'firebase/app'
-    import { getDatabase, ref , get,push, remove} from 'firebase/database'
+    import { getDatabase, ref , get,push, remove , update} from 'firebase/database'
     import config from '../services/config'
 
     var app = initializeApp(config);
@@ -94,37 +94,73 @@
             },
 
             verificarCarrito(username){
-                var carritoAnterior =[]
+                var carritoSesion = []
+                var carritoAnterior = []
+                var arregloCarrito = []
+
                 var ident = localStorage.getItem('ID')
                 var carritoOld = ref(db, "carrito/"+ ident)
+
                 get(carritoOld).then((snapshot) => {
                     if (snapshot.exists()) {
+                        //existen productos en la sesion
                         snapshot.forEach(function (childSnapshot) {  
                             var value = childSnapshot.val()
                             var producto ={
+                                key : childSnapshot.key,
                                 id: value.id,
                                 cantidad: value.cantidad
                             }
-                            carritoAnterior.push(producto)
+                            carritoSesion.push(producto)
                         })
+                        
+                        //carrito del usuario
                         var carritoNew = ref(db, "carrito/"+ username)
-                        for (let i = 0; i < carritoAnterior.length; i++) {
-                            push(carritoNew,{
-                                cantidad: carritoAnterior[i].cantidad,
-                                id: carritoAnterior[i].id
-                            })
-                        }
-                        this.quitarElemento()
+                        get(carritoNew).then((snapshot) => {
+                            if(snapshot.exists()){
+                                //existen productos en el carrito del usuario
+                                snapshot.forEach(function (childSnapshot) {  
+                                    var value = childSnapshot.val()
+                                    var producto ={
+                                        key : childSnapshot.key,
+                                        id: value.id,
+                                        cantidad: value.cantidad
+                                    }
+                                    carritoAnterior.push(producto)
+                                })
+                                carritoAnterior.forEach(item => {
+                                    arregloCarrito.push(item.id)
+                                })
+
+                                for (let i = 0; i < carritoSesion.length; i++) {
+                                    if (!arregloCarrito.includes(carritoSesion[i].id)){
+                                        push(carritoNew,{
+                                            cantidad: carritoSesion[i].cantidad,
+                                            id: carritoSesion[i].id
+                                        })
+                                    }
+                                }
+                            }else{
+                                //no hay productos anteriores.Copiar solo de sesion
+                                for (let i = 0; i < carritoSesion.length; i++) {
+                                    push(carritoNew,{
+                                        cantidad: carritoSesion[i].cantidad,
+                                        id: carritoSesion[i].id
+                                    })
+                                }
+                            }
+                        })
+
+                        this.quitarCarritoAnterior()
                         localStorage.removeItem('ID')
                     }else{
                         this.productos = []
                     }
                     this.cartStore.getNumber()
                 })
-                
             },
 
-            quitarElemento(){ 
+            quitarCarritoAnterior(){ 
                 var ident = localStorage.getItem('ID')
                 var carritoRef = ref(db, "carrito/"+ ident)
                 remove(carritoRef)

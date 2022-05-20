@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-6 grid grid-cols-1 row-gap-12 lg:grid-cols-10 lg:col-gap-10 lg:pt-12">
+  <div class="container mx-auto p-6 grid col-12">
     <Toast />
     <Payment  :total="total"></Payment>
     <Summary :items="this.productos"></Summary>
@@ -14,9 +14,8 @@ import { initializeApp } from 'firebase/app'
 import { getDatabase, ref , get,} from 'firebase/database'
 import config from '../services/config'
 
-  var app = initializeApp(config);
-  var db = getDatabase(app)
-
+var app = initializeApp(config);
+var db = getDatabase(app)
 
 export default {
   name: "CheckoutPage",
@@ -24,16 +23,19 @@ export default {
     Payment,
     Summary,
   },
+
   data() {
     return {
       productos:[],
       total: 0,
     };
   },
+
   mounted() {
     this.getTotal(this.productos);
     this.cargarItems()
   },
+
   methods: {
     getTotal(items) {
       items.forEach(item => {
@@ -62,7 +64,6 @@ export default {
           this.productos = null
         }
       })
-      console.log(this.productos)
     },
 
     async getDetalleProducto(id, cantidad){

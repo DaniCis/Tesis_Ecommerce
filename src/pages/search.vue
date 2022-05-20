@@ -67,7 +67,7 @@
             <form class="col-2 hidden lg:block"> 
               <span class="p-input-icon-left mt-6">
                 <i class="pi pi-search" />
-                <InputText type="text" placeholder="Buscar" style="width:260px" />
+                <InputText type="text" placeholder="Buscar" class="search" />
               </span>        
               <Disclosure as="div"  class="border-b border-gray-200 py-6" v-slot="{ open }">
                 <h3 class="-my-3 flow-root">
@@ -94,9 +94,9 @@
               </Disclosure>
               <Button class='mt-4' label="Buscar" ></Button>
             </form>
-            <div class="col-10 content-section layout-content">
-              <div class="card">
-                <DataView :value="products" :layout="layout" :paginator="true" :rows="8" :sortOrder="sortOrder" :sortField="sortField">
+            <div class="col-12 lg:col-10 content-section layout-content" >
+              <div class="card" >
+                <DataView v-if="this.products == []" :value="products" :layout="layout" :paginator="true" :rows="8" :sortOrder="sortOrder" :sortField="sortField">
                   <template #header>
                     <div class="grid grid-nogutter">
                         <div class="col-6" style="text-align: left">
@@ -217,11 +217,11 @@ export default {
     }
   },
   mounted() {
-    this.getProducts()
+    //this.getProducts()
     this.getMarcas()
   },
   methods: {
-    async getProducts(){
+    /*async getProducts(){
       await this.axios.get('http://10.147.17.173:5002/productos/public'
       ).then(response => {
         if(response.data !=null)
@@ -229,7 +229,7 @@ export default {
       }).catch (e=> {
         this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
       })
-    },
+    },*/
 
     async getMarcas(){
       var listado =[]
@@ -238,7 +238,7 @@ export default {
         if(response.data !=null){
           listado = response.data
           for (let i = 0; i < listado.length; i++) {
-              var marca = {
+            var marca = {
               value: listado[i].marca_producto,
               label: listado[i].marca_producto,
               checked:false
@@ -281,6 +281,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .search{
+    width: 260px;
+  }
+
+  @media screen and (max-width: 1200px){
+    .search{
+      width:180px;
+    }
+  }
+
+  @media screen and (min-width: 1201px) and (max-width: 1380px){
+    .search{
+      width:210px;
+    }
+  }
   .p-selectbutton{
     box-shadow: none;
   }
@@ -362,6 +377,7 @@ export default {
   }
 
   @media screen and (max-width: 576px) {
+    
     .product-list-item {
       flex-direction: column;
       align-items: center;

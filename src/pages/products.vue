@@ -22,7 +22,7 @@
 					<template #list="slotProps">
 						<div class="col-12">
 							<div class="product-list-item">
-								<img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
+								<img :src="`http://10.147.17.173:5002/productos/images_medium/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
 								<div class="product-list-detail">
 									<div class="product-name">{{slotProps.data.nombre_producto}}</div>
 									<i class="pi pi-tag product-category-icon"></i><span class="product-category">Nuevo</span>
@@ -46,7 +46,7 @@
 									<span class="product-badge status-instock">En Stock</span>
 								</div>
 								<div class="product-grid-item-content">
-									<img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
+									<img :src="`http://10.147.17.173:5002/productos/images_medium/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
 									<div class="product-name">{{slotProps.data.nombre_producto}}</div>
 								</div>
 								<div class="product-grid-item-bottom">
@@ -66,12 +66,11 @@
 <script>
 import Details from '../components/details.vue'
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref , onValue , set , push} from 'firebase/database'
+import { getDatabase, ref , get, push} from 'firebase/database'
 import config from '../services/config'
 
 var app = initializeApp(config);
 var db = getDatabase(app)
-var carritoRef = ref(db, "carrito")
 
 export default {
 
@@ -93,13 +92,6 @@ export default {
     },
     mounted() {
         this.getProducts()
-		/*
-		LEER CARRITO
-		onValue(carritoRef, (snapshot) => {
-			const data = snapshot.val();
-			console.log(data)
-		});
-		*/
 		
     },
     methods: {
@@ -115,13 +107,66 @@ export default {
         },
 
 		addToCart(id){
-			
-			var carritoUser = ref(db, 'carrito/'+ id)
-			push(carritoUser,{
-				cantidad:1,
-				id: id
+			var ident =''
+			if( getAccessToken() == null)
+				ident = localStorage.getItem('ID')
+			else
+				ident = getUser()
+			var carritoUser = ref(db, 'carrito/'+ ident)
+
+			const promesa2 = this.getDetalleProducto(id)
+			promesa2.then(
+				response => {
+					const stock = response
+					var promesa = this.verificarExistencia(carritoUser, id)
+					promesa.then(
+						result => {
+							if(result){
+								if(result.cantidad +1 <= stock){
+									var articuloRef = ref(db, 'carrito/'+ ident + '/' +result.key)
+									update(articuloRef,{
+										cantidad : result.cantidad + 1
+									})
+									this.terminarCompra()
+								}else{
+									this.$toast.add({severity:'error', summary:'Error', detail: 'Cantidad agregada fuera de stock', life: 3000})
+								}
+							}else{
+								push(carritoUser,{
+									cantidad:1,
+									id: id
+								})
+								this.terminarCompra()
+							}
+						}
+					)
+				}
+			)
+		},
+
+		terminarCompra(){
+			this.cartStore.getNumber()
+			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
+		},
+
+		verificarExistencia(ref, id){
+			var productosExistentes = []
+			const valor = get(ref).then((snapshot) => {
+				snapshot.forEach(function (childSnapshot) {  
+					var value = childSnapshot.val()
+					var id ={
+						key : childSnapshot.key,
+						id: value.id,
+						cantidad: value.cantidad
+					}
+					productosExistentes.push(id)
+				})
+				for (let i = 0; i < productosExistentes.length; i++) {
+					if(id == productosExistentes[i].id)
+						return productosExistentes[i]
+				}
 			})
-			this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000});
+			return valor
 		},
 
 		openModal(id){

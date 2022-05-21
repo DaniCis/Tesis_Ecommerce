@@ -1,7 +1,9 @@
 <template>
   <div>
     <Header />
-    <router-view></router-view>
+    <div class="mt-8">
+      <router-view></router-view>
+    </div>
     <Footer />
     <CheckToken v-if="isLoggedIn"/>
   </div>

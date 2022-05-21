@@ -17,10 +17,12 @@
                   </button>
                 </div>
                 <form class="mt-1 border-t border-gray-200">
-                  <span class="p-input-icon-left ml-4 mt-3 mb-3">
-                    <i class="pi pi-search" />
-                    <InputText type="text" placeholder="Buscar" style="width:270px" />
-                  </span>  
+                  <div class="p-inputgroup mt-6 ">
+                    <InputText v-model="v$.textoBuscar.$model" :class="{'p-invalid':v$.textoBuscar.$invalid && submitted}"  placeholder="Buscar" class="search"/>
+                    <Button icon="pi pi-search" class="p-button-info" v-show="this.mostrar" @click="handleSubmit(!v$.$invalid)"/>
+                    <Button icon="pi pi-times" class="p-button-info" v-show="!this.mostrar" @click="limpiarBuscar()" />
+                  </div>
+                  <small v-if="(v$.textoBuscar.$invalid && submitted) || v$.textoBuscar.$pending.$response" class="p-error">Este campo es requerido</small> 
                   <Disclosure as="div" class="border-t border-gray-200 px-4 py-4" v-slot="{ open }">
                     <h3 class="-mx-2 -my-3 flow-root">
                       <DisclosureButton class="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
@@ -55,7 +57,7 @@
 
       <main class="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative z-10 flex items-baseline justify-between pt-6">
-          <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Búsqueda de Productos</h2>
+          <h2 class="text-2xl font-extrabold tracking-tight text-gray-900 mt-2">Búsqueda de Productos</h2>
           <div class="flex items-center">
             <button type="button" class="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden" @click="mobileFiltersOpen = true">
               <FilterIcon class="w-8 h-8" aria-hidden="true" />
@@ -71,10 +73,11 @@
                 <Button icon="pi pi-times" class="p-button-info" v-show="!this.mostrar" @click="limpiarBuscar()" />
               </div>
               <small v-if="(v$.textoBuscar.$invalid && submitted) || v$.textoBuscar.$pending.$response" class="p-error">Este campo es requerido</small>
-              <Disclosure as="div"  class="border-b border-gray-200 py-6" v-slot="{ open }">
+
+              <Disclosure as="div"  class="border-b border-gray-200 py-6" v-slot="{ open }" v-if="this.marcas.length > 0">
                 <h3 class="-my-3 flow-root">
                   <DisclosureButton class="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                    <span class="font-medium text-gray-900">Marca</span>
+                    <span class="font-medium text-gray-900">FIltrar por marca</span>
                     <span class="ml-6 flex items-center">
                       <PlusSmIcon v-if="!open" class="h-8 w-8" aria-hidden="true" />
                       <MinusSmIcon v-else class="h-8 w-8" aria-hidden="true" />
@@ -84,11 +87,11 @@
                 <DisclosurePanel class="pt-5">
                   <div class="space-y-4">
                     <div v-for="(option, optionIdx) in marcas" :key="option.value" class="flex items-center">
-                      <input :id="optionIdx" :value="option.value" type="radio" :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
+                      <input :id="optionIdx" :value="option.value" v-model="marcasSeleccionadas" type="checkbox" :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
                       <label :for="optionIdx" class="ml-2 text-sm text-gray-600"> {{ option.label }}</label>
                     </div>
                   </div>
-                 <Button class="mt-6 p-button-info" label="Buscar" @click='buscarMarca()' ></Button>
+                 <Button class="mt-6 p-button-info" label="Buscar" @click='buscarMarca(marcasSeleccionadas)' ></Button>
                 </DisclosurePanel>
               </Disclosure>
             </form>
@@ -98,7 +101,7 @@
                 </div>
             </div>
             <div class="col-12 lg:col-10 content-section layout-content" v-else >
-              <span class=" mt-9 ml-6">Resultados encontrados para:  </span>
+              <span class=" mt-9 ml-6">Resultados encontrados para: {{this.texto}}</span>
               <div class="card" >
                 <DataView :value="productos" :layout="layout" :paginator="true" :rows="8" :sortOrder="sortOrder" :sortField="sortField">
                   <template #header>
@@ -117,7 +120,7 @@
                         <img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
                         <div class="product-list-detail">
                           <div class="product-name">{{slotProps.data.nombre_producto}}</div>
-                          <i class="pi pi-tag product-category-icon"></i><span class="product-category">Nuevo</span>
+                          <i class="pi pi-tag product-category-icon"></i><span class="product-category">{{slotProps.data.marca_producto}}</span>
                         </div>
                         <div class="product-list-action">
                           <span class="product-price">{{slotProps.data.pvp_item}}</span>
@@ -133,7 +136,7 @@
                         <div class="product-grid-item-top">
                           <div>
                             <i class="pi pi-tag product-category-icon"></i>
-                            <span class="product-category">Nuevo</span>
+                            <span class="product-category">{{slotProps.data.marca_producto}}</span>
                           </div>
                           <span class="product-badge status-instock">En Stock</span>
                         </div>
@@ -167,157 +170,168 @@
     Disclosure,
     DisclosureButton,
     DisclosurePanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
     TransitionChild,
     TransitionRoot,
   } from '@headlessui/vue'
   import { XIcon } from '@heroicons/vue/outline'
-  import {  FilterIcon, MinusSmIcon, PlusSmIcon, } from '@heroicons/vue/solid'
+  import { FilterIcon, MinusSmIcon, PlusSmIcon, } from '@heroicons/vue/solid'
+  import { required } from "@vuelidate/validators"
+  import { useVuelidate } from "@vuelidate/core"
   import Details from '../components/details.vue'
-  import { required } from "@vuelidate/validators";
-  import { useVuelidate } from "@vuelidate/core";
+  
+  export default {
+    components: {
+      Dialog,
+      DialogPanel,
+      Disclosure,
+      DisclosureButton,
+      DisclosurePanel,
+      TransitionChild,
+      TransitionRoot,
+      FilterIcon,
+      MinusSmIcon,
+      PlusSmIcon,
+      XIcon,
+      Details
+    },
 
-export default {
-  components: {
-    Dialog,
-    DialogPanel,
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
-    TransitionChild,
-    TransitionRoot,
-    FilterIcon,
-    MinusSmIcon,
-    PlusSmIcon,
-    XIcon,
-    Details
-  },
+    setup() {
+      const mobileFiltersOpen = ref(false)
+      const v$ = useVuelidate()
+      return { mobileFiltersOpen, v$}
+    },
 
-  setup() {
-    const mobileFiltersOpen = ref(false)
-    const v$ = useVuelidate()
-    return { mobileFiltersOpen, v$}
-  },
-
-  data() {
-    return { 
-      open:false,
-      mostrar:true,
-      submitted: false,
-      textoBuscar:'',
-      productos: [],
-      marcas:[],
-      layout: 'grid',
-      id:null,
-      sortKey: null,
-      sortOrder: null,
-      sortField: null,
-      sortOptions: [
-        {label: 'Más alto a bajo', value: '!pvp_item'},
-        {label: 'Más bajo a alto', value: 'pvp_item'},
-      ]
-    }
-  },
-
-  validations() {
-    return {
-      textoBuscar: { required },
-    }
-  },
-
-  mounted() {
-    this.getMarcas()
-  },
-
-  methods: {
-    handleSubmit(isFormValid) {
-      this.submitted = true
-      if (!isFormValid) {
-          return
+    data() {
+      return { 
+        open:false,
+        mostrar:true,
+        submitted: false,
+        textoBuscar:'',
+        texto:'',
+        productos: [],
+        productos2:[],
+        marcas:[],
+        marcasSeleccionadas:[],
+        layout: 'grid',
+        id:null,
+        sortKey: null,
+        sortOrder: null,
+        sortField: null,
+        sortOptions: [
+          {label: 'Más alto a bajo', value: '!pvp_item'},
+          {label: 'Más bajo a alto', value: 'pvp_item'},
+        ]
       }
-      this.buscar()
     },
-    buscar(){
-      if(this.textoBuscar !== '')
-        this.mostrar = false
-      const texto = this.textoBuscar
-      this.buscarProductos(texto)
+
+    validations() {
+      return {
+        textoBuscar: { required },
+      }
     },
-    
-    limpiarBuscar(){
-      this.submitted = false
-      this.textoBuscar = ''
-      this.mostrar = true
-      this.productos = []
-    },
-    
-    async buscarProductos(texto){
-      await this.axios.get(`http://10.147.17.173:5002/productos/findByWord/${texto}`
-      ).then((response) => {
-          console.log(response.data)
-          if(response.data !=null)
-              this.productos = response.data
+
+    methods: {
+      handleSubmit(isFormValid) {
+        this.submitted = true
+        if (!isFormValid) {
+            return
+        }
+        this.buscar()
+      },
+
+      buscar(){
+        if(this.textoBuscar !== '')
+          this.mostrar = false
+        this.texto = this.textoBuscar
+        this.buscarProductos(this.texto)
+        this.texto = this.texto.toUpperCase()
+      },
+      
+      limpiarBuscar(){
+        this.submitted = false
+        this.textoBuscar = ''
+        this.mostrar = true
+        this.productos = []
+        this.marcas = []
+      },
+      
+      async buscarProductos(texto){
+        await this.axios.get(`http://10.147.17.173:5002/productos/public/findByWord/${texto}`
+        ).then((response) => {
+          if(response.data !=null){
+            this.productos = response.data
+            for (var i = 0; i < this.productos.length; i++) {
+              var marca = {
+                value: this.productos[i].marca_producto,
+                label: this.productos[i].marca_producto,
+                checked:true
+              }
+              this.marcas.push(marca)
+            }
+          }
           else{
             this.productos=[]
           }
-      }).catch (e => {
-        this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
-      })
-    },
-
-    async getMarcas(){
-      var listado =[]
-      await this.axios.get('http://10.147.17.173:5002/marcasProductos'
-      ).then(response => {
-        if(response.data !=null){
-          listado = response.data
-          for (let i = 0; i < listado.length; i++) {
-            var marca = {
-              value: listado[i].marca_producto,
-              label: listado[i].marca_producto,
-              checked:false
-            }
-            this.marcas.push(marca)
+        }).catch (e => {
+          this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
+        })
+      },
+      
+      async buscarFiltrados(texto){
+        await this.axios.get(`http://10.147.17.173:5002/productos/public/findByWord/${texto}`
+        ).then((response) => {
+          if(response.data !=null){
+            this.productos2 = response.data
           }
+          else{
+            this.productos2=[]
+          }
+        }).catch (e => {
+          this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
+        })
+      },
+
+      buscarMarca(marcas){
+        var coincidencias = []
+        this.buscarFiltrados(this.textoBuscar)
+        var productosCopia = this.productos2
+        if(marcas.length !=0){
+          for (let i = 0; i < productosCopia.length; i++) {
+            if(marcas.includes(productosCopia[i].marca_producto)){
+              coincidencias.push(productosCopia[i])
+            }
+          }
+          this.productos = coincidencias
+        }else
+        this.productos = productosCopia
+      },
+
+      openModal(id){
+        this.id = id
+        this.open = true
+      },
+
+      getValue(e) {     
+        this.open = !e;
+      },
+
+      onSortChange(event){
+        const value = event.value.value;
+        const sortValue = event.value;
+        console.log(value)
+        console.log(sortValue)
+        if (value.indexOf('!') === 0) {
+          this.sortOrder = -1;
+          this.sortField = value.substring(1, value.length);
+          this.sortKey = sortValue;
         }
-      }).catch (e=> {
-        this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
-      })
-    },
-
-    openModal(id){
-			this.id = id
-			this.open = true
-		},
-
-		getValue(e) {     
-			this.open = !e;
-		},
-
-    onSortChange(event){
-      const value = event.value.value;
-      const sortValue = event.value;
-      console.log(value)
-      console.log(sortValue)
-      if (value.indexOf('!') === 0) {
-        this.sortOrder = -1;
-        this.sortField = value.substring(1, value.length);
-        this.sortKey = sortValue;
+        else {
+          this.sortOrder = 1;
+          this.sortField = value;
+          this.sortKey = sortValue;
+        }
       }
-      else {
-        this.sortOrder = 1;
-        this.sortField = value;
-        this.sortKey = sortValue;
-      }
-  }
-  }
+    }
 }
 </script>
 

@@ -22,7 +22,7 @@
 					<template #list="slotProps">
 						<div class="col-12">
 							<div class="product-list-item">
-								<img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
+								<img :src="`http://10.147.17.173:5002/productos/images_medium/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
 								<div class="product-list-detail">
 									<div class="product-name">{{slotProps.data.nombre_producto}}</div>
 									<i class="pi pi-tag product-category-icon"></i><span class="product-category">Nuevo</span>
@@ -46,7 +46,7 @@
 									<span class="product-badge status-instock">En Stock</span>
 								</div>
 								<div class="product-grid-item-content">
-									<img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
+									<img :src="`http://10.147.17.173:5002/productos/images_medium/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
 									<div class="product-name">{{slotProps.data.nombre_producto}}</div>
 								</div>
 								<div class="product-grid-item-bottom">

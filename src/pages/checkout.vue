@@ -30,7 +30,16 @@ export default {
       total: 0,
     };
   },
-
+ /*
+ orden de venta
+  con datos: 2 tipo e identificacion
+  consumidor final: 
+  datos personales
+ 
+ nombre,correo sino crear cliente 
+ 
+ calcular subtotal, total, iva
+ */ 
   mounted() {
     this.getTotal(this.productos);
     this.cargarItems()

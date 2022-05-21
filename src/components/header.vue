@@ -36,9 +36,9 @@
       </Dialog>
     </TransitionRoot>
 
-    <header class="relative bg-white">
+    <header class=" bg-white">
       <p class="bg-indigo-600 h-10 flex items-center justify-center  font-medium text-white px-4 sm:px-6 lg:px-8">Get free delivery on orders over $100</p>
-      <nav aria-label="Top" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav aria-label="Top" class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="border-b border-gray-200">
           <div class="h-16 flex items-center">
             <button type="button" class="bg-white p-2 rounded-md text-gray-400 lg:hidden" @click="open = true">
@@ -197,6 +197,12 @@
 </script>
 
 <style>
+  header{
+    position: fixed;
+    top:0;
+    width: 100%;
+    z-index:1;
+  }
   .confirmation-content {
     display: flex;
     align-items: center;

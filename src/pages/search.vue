@@ -55,7 +55,7 @@
 
       <main class="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative z-10 flex items-baseline justify-between pt-6">
-          <h2 class="text-3xl font-extrabold tracking-tight text-gray-900">Búsqueda de Productos</h2>
+          <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Búsqueda de Productos</h2>
           <div class="flex items-center">
             <button type="button" class="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden" @click="mobileFiltersOpen = true">
               <FilterIcon class="w-8 h-8" aria-hidden="true" />
@@ -64,39 +64,43 @@
         </div>
         <section aria-labelledby="products-heading" class="pt-2 pb-20">
           <div class="grid">
-            <form class="col-2 hidden lg:block"> 
-              <span class="p-input-icon-left mt-6">
-                <i class="pi pi-search" />
-                <InputText type="text" placeholder="Buscar" class="search" />
-              </span>        
+            <form class="col-2 hidden lg:block "> 
+              <div class="p-inputgroup mt-6 ">
+                <InputText v-model="v$.textoBuscar.$model" :class="{'p-invalid':v$.textoBuscar.$invalid && submitted}"  placeholder="Buscar" class="search"/>
+                <Button icon="pi pi-search" class="p-button-info" v-show="this.mostrar" @click="handleSubmit(!v$.$invalid)"/>
+                <Button icon="pi pi-times" class="p-button-info" v-show="!this.mostrar" @click="limpiarBuscar()" />
+              </div>
+              <small v-if="(v$.textoBuscar.$invalid && submitted) || v$.textoBuscar.$pending.$response" class="p-error">Este campo es requerido</small>
               <Disclosure as="div"  class="border-b border-gray-200 py-6" v-slot="{ open }">
                 <h3 class="-my-3 flow-root">
                   <DisclosureButton class="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                    <span class="font-medium text-gray-900">
-                      Marca
-                    </span>
+                    <span class="font-medium text-gray-900">Marca</span>
                     <span class="ml-6 flex items-center">
                       <PlusSmIcon v-if="!open" class="h-8 w-8" aria-hidden="true" />
                       <MinusSmIcon v-else class="h-8 w-8" aria-hidden="true" />
                     </span>
                   </DisclosureButton>
                 </h3>
-                <DisclosurePanel class="pt-6">
+                <DisclosurePanel class="pt-5">
                   <div class="space-y-4">
                     <div v-for="(option, optionIdx) in marcas" :key="option.value" class="flex items-center">
-                      <input :id="optionIdx" :value="option.value" type="checkbox" :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
-                      <label :for="optionIdx" class="ml-3 text-sm text-gray-600">
-                        {{ option.label }}
-                      </label>
+                      <input :id="optionIdx" :value="option.value" type="radio" :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
+                      <label :for="optionIdx" class="ml-2 text-sm text-gray-600"> {{ option.label }}</label>
                     </div>
                   </div>
+                 <Button class="mt-6 p-button-info" label="Buscar" @click='buscarMarca()' ></Button>
                 </DisclosurePanel>
               </Disclosure>
-              <Button class='mt-4' label="Buscar" ></Button>
             </form>
-            <div class="col-12 lg:col-10 content-section layout-content" >
+            <div class="col-12 lg:col-10 content-section layout-content" v-if="this.mostrar">
+                <div class="mt-6">
+                  hola
+                </div>
+            </div>
+            <div class="col-12 lg:col-10 content-section layout-content" v-else >
+              <span class=" mt-9 ml-6">Resultados encontrados para:  </span>
               <div class="card" >
-                <DataView v-if="this.products == []" :value="products" :layout="layout" :paginator="true" :rows="8" :sortOrder="sortOrder" :sortField="sortField">
+                <DataView :value="productos" :layout="layout" :paginator="true" :rows="8" :sortOrder="sortOrder" :sortField="sortField">
                   <template #header>
                     <div class="grid grid-nogutter">
                         <div class="col-6" style="text-align: left">
@@ -156,24 +160,25 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import {
-  Dialog,
-  DialogPanel,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  TransitionChild,
-  TransitionRoot,
-} from '@headlessui/vue'
-import { XIcon } from '@heroicons/vue/outline'
-import {  FilterIcon, MinusSmIcon, PlusSmIcon, } from '@heroicons/vue/solid'
-import Details from '../components/details.vue'
-
+  import { ref } from 'vue'
+  import {
+    Dialog,
+    DialogPanel,
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItems,
+    TransitionChild,
+    TransitionRoot,
+  } from '@headlessui/vue'
+  import { XIcon } from '@heroicons/vue/outline'
+  import {  FilterIcon, MinusSmIcon, PlusSmIcon, } from '@heroicons/vue/solid'
+  import Details from '../components/details.vue'
+  import { required } from "@vuelidate/validators";
+  import { useVuelidate } from "@vuelidate/core";
 
 export default {
   components: {
@@ -194,16 +199,20 @@ export default {
     XIcon,
     Details
   },
+
   setup() {
     const mobileFiltersOpen = ref(false)
-    return {
-      mobileFiltersOpen,
-    }
+    const v$ = useVuelidate()
+    return { mobileFiltersOpen, v$}
   },
+
   data() {
     return { 
       open:false,
-      products: [],
+      mostrar:true,
+      submitted: false,
+      textoBuscar:'',
+      productos: [],
       marcas:[],
       layout: 'grid',
       id:null,
@@ -216,20 +225,52 @@ export default {
       ]
     }
   },
+
+  validations() {
+    return {
+      textoBuscar: { required },
+    }
+  },
+
   mounted() {
-    //this.getProducts()
     this.getMarcas()
   },
+
   methods: {
-    /*async getProducts(){
-      await this.axios.get('http://10.147.17.173:5002/productos/public'
-      ).then(response => {
-        if(response.data !=null)
-          this.products = response.data
-      }).catch (e=> {
+    handleSubmit(isFormValid) {
+      this.submitted = true
+      if (!isFormValid) {
+          return
+      }
+      this.buscar()
+    },
+    buscar(){
+      if(this.textoBuscar !== '')
+        this.mostrar = false
+      const texto = this.textoBuscar
+      this.buscarProductos(texto)
+    },
+    
+    limpiarBuscar(){
+      this.submitted = false
+      this.textoBuscar = ''
+      this.mostrar = true
+      this.productos = []
+    },
+    
+    async buscarProductos(texto){
+      await this.axios.get(`http://10.147.17.173:5002/productos/findByWord/${texto}`
+      ).then((response) => {
+          console.log(response.data)
+          if(response.data !=null)
+              this.productos = response.data
+          else{
+            this.productos=[]
+          }
+      }).catch (e => {
         this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
       })
-    },*/
+    },
 
     async getMarcas(){
       var listado =[]

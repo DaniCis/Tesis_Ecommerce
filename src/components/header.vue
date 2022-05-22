@@ -97,7 +97,7 @@
           <Button label="Sí" icon="pi pi-check" @click="close" class="p-button-text" autofocus />
       </template>
     </Dialog2>
-
+    
     <Cart v-if='abrir' :abrir='this.abrir' @getCartValue="getValue($event)" />
   </div>
 </template>
@@ -196,7 +196,7 @@
   }
 </script>
 
-<style>
+<style >
   header{
     position: fixed;
     top:0;

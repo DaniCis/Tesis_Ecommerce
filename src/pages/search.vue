@@ -124,7 +124,13 @@
                               <i class="pi pi-tag product-category-icon"></i><span class="product-category">{{slotProps.data.marca_producto}}</span>
                             </div>
                             <div class="product-list-action">
-                              <span class="product-price">{{slotProps.data.pvp_item}}</span>
+                              <div v-if="slotProps.data.descuentoPorcentaje_item==0">
+                                <span class="product-price">{{slotProps.data.pvp_item}}</span>
+                              </div>
+                              <div v-else>
+                                <span class="product-price">${{slotProps.data.precioDescuento_producto}}</span>
+                                <span class="ml-2" style="text-decoration:line-through">{{slotProps.data.pvp_item}}</span>
+                              </div>
                               <Button  @click="addToCart(slotProps.data.id_producto)" icon="pi pi-shopping-cart" label="Añadir al carrito"></Button>
                               <span class="product-badge status-instock">En Stock</span>
                             </div>
@@ -146,7 +152,13 @@
                               <div class="product-name">{{slotProps.data.nombre_producto}}</div>
                             </div>
                             <div class="product-grid-item-bottom">
-                              <span class="product-price">{{slotProps.data.pvp_item}}</span>
+                              <div v-if="slotProps.data.descuentoPorcentaje_item==0">
+                                <span class="product-price">{{slotProps.data.pvp_item}}</span>
+                              </div>
+                              <div v-else>
+                                <span class="product-price">${{slotProps.data.precioDescuento_producto}}</span>
+                                <span class="ml-2" style="text-decoration:line-through">{{slotProps.data.pvp_item}}</span>
+                              </div>
                               <Button  @click="addToCart(slotProps.data.id_producto)" icon="pi pi-shopping-cart"></Button>
                             </div>
                           </div>
@@ -227,6 +239,7 @@
         textoBuscar:'',
         texto:'',
         productos: [],
+        temp:[],
         productos2:[],
         marcas:[],
         marcasSeleccionadas:[],
@@ -278,7 +291,25 @@
         await this.axios.get(`http://10.147.17.173:5002/productos/public/findByWord/${texto}`
         ).then((response) => {
           if(response.data !=null){
-            this.productos = response.data
+            this.temp = response.data
+            for (let i = 0; i < this.temp.length; i++) {
+              if(this.temp[i].descuentoPorcentaje_item != 0 ){
+                var descuento = (parseFloat(this.temp[i].descuentoPorcentaje_item))/100
+                var precioFinal = (this.temp[i].pvp_item.slice(1)) * descuento.toFixed(2)
+              }
+              else{
+                precioFinal = this.temp[i].pvp_item.slice(1)
+              }
+              var contenido ={
+                pvp_item : this.temp[i].pvp_item,
+                id_producto: this.temp[i].id_producto,
+                nombre_producto: this.temp[i].nombre_producto,
+                imagen_producto: this.temp[i].imagen_producto,
+                descuentoPorcentaje_item: this.temp[i].descuentoPorcentaje_item,
+                precioDescuento_producto : precioFinal
+              }
+              this.productos.push(contenido)
+            }
             for (var i = 0; i < this.productos.length; i++) {
               var marca = {
                 value: this.productos[i].marca_producto,
@@ -301,7 +332,25 @@
         await this.axios.get(`http://10.147.17.173:5002/productos/public/findByWord/${texto}`
         ).then((response) => {
           if(response.data !=null){
-            this.productos2 = response.data
+            this.temp = response.data
+            for (let i = 0; i < this.temp.length; i++) {
+              if(this.temp[i].descuentoPorcentaje_item != 0 ){
+                var descuento = (parseFloat(this.temp[i].descuentoPorcentaje_item))/100
+                var precioFinal = (this.temp[i].pvp_item.slice(1)) * descuento.toFixed(2)
+              }
+              else{
+                precioFinal = this.temp[i].pvp_item.slice(1)
+              }
+              var contenido ={
+                pvp_item : this.temp[i].pvp_item,
+                id_producto: this.temp[i].id_producto,
+                nombre_producto: this.temp[i].nombre_producto,
+                imagen_producto: this.temp[i].imagen_producto,
+                descuentoPorcentaje_item: this.temp[i].descuentoPorcentaje_item,
+                precioDescuento_producto : precioFinal
+              }
+              this.productos2.push(contenido)
+            }
           }
           else{
             this.productos2=[]

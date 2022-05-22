@@ -7,7 +7,7 @@
           <DialogOverlay class="absolute inset-0 bg-opacity-75 transition-opacity" style="background-color:#5e5e62cc"/>
         </TransitionChild>
 
-        <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+        <div class="pointer-events-none mt-20 fixed inset-y-0 right-0 flex max-w-full pl-10 ">
           <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
             <div class="pointer-events-auto w-screen max-w-md">
               <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
@@ -53,7 +53,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="border-t border-gray-200 py-4 px-4 sm:px-6">
+                <div class="border-t border-gray-200 py-3 px-4 sm:px-6">
                   <div v-if="productos==null">
                     <div class="mt-4 mb-6 flex justify-center text-center text-sm text-gray-500">
                       <button type="button" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700" @click="closeCart" >Seguir Comprando</button>
@@ -65,7 +65,7 @@
                       <p>${{subtotal}}</p>
                     </div>
                     <div class="mt-5">
-                      <router-link to='/checkout' @click="closeCart" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</router-link>
+                      <router-link to='/checkout' @click="closeCart" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</router-link>
                     </div>
                     <div class="mt-4 flex justify-center text-center text-sm text-gray-500">
                       <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500" @click="closeCart" >Seguir Comprando<span aria-hidden="true"> &rarr;</span></button>

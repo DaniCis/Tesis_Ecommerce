@@ -82,7 +82,10 @@
                 await this.axios.post(`http://10.147.17.173:5005/usuario/create`, params
                 ).then(() => {
                     this.resetForm()
-                    this.$router.push('/login');
+                    this.$toast.add({severity:'success', detail: 'Cliente registrado con éxito. Inicie sesión para continuar.', life: 3000})
+                    setTimeout(()=>{
+                        this.$router.push('/login');    
+                    }, 3000)
                 }).catch (e => {
                     this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
                 })

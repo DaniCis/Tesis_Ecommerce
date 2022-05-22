@@ -11,24 +11,22 @@
             <TransitionChild as="template" enter="transition ease-in-out duration-300 transform" enter-from="translate-x-full" enter-to="translate-x-0" leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0" leave-to="translate-x-full">
               <DialogPanel class="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
                 <div class="px-4 flex items-center justify-between">
-                  <h2 class="text-lg font-medium text-gray-900">Filtros</h2>
+                  <h2 class="text-lg font-medium text-gray-900">Filtro</h2>
                   <button type="button" class="-mr-8 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400" @click="mobileFiltersOpen = false">
                     <XIcon class="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
                 <form class="mt-1 border-t border-gray-200">
-                  <div class="p-inputgroup mt-6 ">
-                    <InputText v-model="v$.textoBuscar.$model" :class="{'p-invalid':v$.textoBuscar.$invalid && submitted}"  placeholder="Buscar" class="search"/>
+                  <div class="p-inputgroup mt-6 ml-4 mb-2" style="width:260px">
+                    <InputText   v-model="v$.textoBuscar.$model" :class="{'p-invalid':v$.textoBuscar.$invalid && submitted}"  placeholder="Buscar" class="search"/>
                     <Button icon="pi pi-search" class="p-button-info" v-show="this.mostrar" @click="handleSubmit(!v$.$invalid)"/>
                     <Button icon="pi pi-times" class="p-button-info" v-show="!this.mostrar" @click="limpiarBuscar()" />
                   </div>
                   <small v-if="(v$.textoBuscar.$invalid && submitted) || v$.textoBuscar.$pending.$response" class="p-error">Este campo es requerido</small> 
-                  <Disclosure as="div" class="border-t border-gray-200 px-4 py-4" v-slot="{ open }">
+                  <Disclosure as="div" class="border-t border-gray-200 px-4 py-4" v-slot="{ open }" v-if="this.marcas.length > 0">
                     <h3 class="-mx-2 -my-3 flow-root">
                       <DisclosureButton class="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
-                        <span class="font-medium text-gray-900">
-                          Marca
-                        </span>
+                        <span class="font-medium text-gray-900">Filtrar por marca</span>
                         <span class="ml-6 flex items-center">
                           <PlusSmIcon v-if="!open" class="h-8 w-8" aria-hidden="true" />
                           <MinusSmIcon v-else class="h-8 w-8" aria-hidden="true" />
@@ -38,15 +36,15 @@
                     <DisclosurePanel class="pt-6">
                       <div class="space-y-6">
                         <div v-for="(option, optionIdx) in marcas" :key="option.value" class="flex items-center">
-                          <input :id="optionIdx" :value="option.value" type="checkbox" :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
+                          <input :id="optionIdx" :value="option.value" type="checkbox" v-model='marcasSeleccionadas' :checked="option.checked" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500" />
                           <label :for="optionIdx" class="ml-3 min-w-0 flex-1 text-gray-500">
                             {{ option.label }}
                           </label>
                         </div>
                       </div>
+                      <Button class="mt-6 p-button-info" label="Buscar" @click='buscarMarca(marcasSeleccionadas)' ></Button>
                     </DisclosurePanel>
                   </Disclosure>
-                  <Button class='mt-2 ml-4' label="Buscar" ></Button>
                 </form>
                 
               </DialogPanel>
@@ -55,16 +53,16 @@
         </Dialog>
       </TransitionRoot>
 
-      <main class="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main class="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8" style=" position:relative; z-index:0;" >
         <div class="relative z-10 flex items-baseline justify-between pt-6">
-          <h2 class="text-2xl font-extrabold tracking-tight text-gray-900 mt-2">Búsqueda de Productos</h2>
+          <h2 class="text-2xl font-extrabold tracking-tight text-gray-900 mt-2" style="z-index:0;">Búsqueda de Productos</h2>
           <div class="flex items-center">
             <button type="button" class="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden" @click="mobileFiltersOpen = true">
               <FilterIcon class="w-8 h-8" aria-hidden="true" />
             </button>
           </div>
         </div>
-        <section aria-labelledby="products-heading" class="pt-2 pb-20">
+        <section aria-labelledby="products-heading" class="pt-2 pb-18">
           <div class="grid">
             <form class="col-2 hidden lg:block "> 
               <div class="p-inputgroup mt-6 ">
@@ -77,7 +75,7 @@
               <Disclosure as="div"  class="border-b border-gray-200 py-6" v-slot="{ open }" v-if="this.marcas.length > 0">
                 <h3 class="-my-3 flow-root">
                   <DisclosureButton class="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                    <span class="font-medium text-gray-900">FIltrar por marca</span>
+                    <span class="font-medium text-gray-900">Filtrar por marca</span>
                     <span class="ml-6 flex items-center">
                       <PlusSmIcon v-if="!open" class="h-8 w-8" aria-hidden="true" />
                       <MinusSmIcon v-else class="h-8 w-8" aria-hidden="true" />
@@ -96,63 +94,73 @@
               </Disclosure>
             </form>
             <div class="col-12 lg:col-10 content-section layout-content" v-if="this.mostrar">
-                <div class="mt-6">
-                  hola
+                <span class='no-result mt-3 font-medium'>¿No encuentras lo que necesitas? </span>
+                <span class='no-result mt-2 font-medium'> Búscalo aquí</span>
+                <div class="mt-6 no-result">  
+                  <img src="https://marketing4ecommerce.cl/wp-content/uploads/2020/02/buscador-avanzado-para-tu-eCommerce.jpg">
                 </div>
             </div>
-            <div class="col-12 lg:col-10 content-section layout-content" v-else >
-              <span class=" mt-9 ml-6">Resultados encontrados para: {{this.texto}}</span>
-              <div class="card" >
-                <DataView :value="productos" :layout="layout" :paginator="true" :rows="8" :sortOrder="sortOrder" :sortField="sortField">
-                  <template #header>
-                    <div class="grid grid-nogutter">
-                        <div class="col-6" style="text-align: left">
+              <div class="col-12 lg:col-10 content-section layout-content" v-else  >
+                <div v-if="!this.vacio">
+                  <span class=" mt-9 ml-6">Resultados encontrados para: {{this.texto}}</span>
+                  <div class="card" >
+                    <DataView :value="productos" :layout="layout" :paginator="true" :rows="8" :sortOrder="sortOrder" :sortField="sortField">
+                      <template #header>
+                        <div class="grid grid-nogutter">
+                          <div class="col-6" style="text-align: left">
                             <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="Ordenar por Precio" @change="onSortChange($event)"/>
-                        </div>
-                        <div class="col-6" style="text-align: right">
-                            <DataViewLayoutOptions v-model="layout" />
-                        </div>
-                    </div>
-                  </template>
-                  <template #list="slotProps">
-                    <div class="col-12">
-                      <div class="product-list-item">
-                        <img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
-                        <div class="product-list-detail">
-                          <div class="product-name">{{slotProps.data.nombre_producto}}</div>
-                          <i class="pi pi-tag product-category-icon"></i><span class="product-category">{{slotProps.data.marca_producto}}</span>
-                        </div>
-                        <div class="product-list-action">
-                          <span class="product-price">{{slotProps.data.pvp_item}}</span>
-                          <Button icon="pi pi-shopping-cart" label="Añadir al carrito"></Button>
-                          <span class="product-badge status-instock">En Stock</span>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
-                  <template #grid="slotProps">
-                    <div class="col-12 md:col-3">
-                      <div class="product-grid-item card">
-                        <div class="product-grid-item-top">
-                          <div>
-                            <i class="pi pi-tag product-category-icon"></i>
-                            <span class="product-category">{{slotProps.data.marca_producto}}</span>
                           </div>
-                          <span class="product-badge status-instock">En Stock</span>
+                          <div class="col-6" style="text-align: right">
+                            <DataViewLayoutOptions v-model="layout" />
+                          </div>
                         </div>
-                        <div class="product-grid-item-content">
-                          <img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
-                          <div class="product-name">{{slotProps.data.nombre_producto}}</div>
+                      </template>
+                      <template #list="slotProps">
+                        <div class="col-12">
+                          <div class="product-list-item">
+                            <img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
+                            <div class="product-list-detail">
+                              <div class="product-name">{{slotProps.data.nombre_producto}}</div>
+                              <i class="pi pi-tag product-category-icon"></i><span class="product-category">{{slotProps.data.marca_producto}}</span>
+                            </div>
+                            <div class="product-list-action">
+                              <span class="product-price">{{slotProps.data.pvp_item}}</span>
+                              <Button  @click="addToCart(slotProps.data.id_producto)" icon="pi pi-shopping-cart" label="Añadir al carrito"></Button>
+                              <span class="product-badge status-instock">En Stock</span>
+                            </div>
+                          </div>
                         </div>
-                        <div class="product-grid-item-bottom">
-                          <span class="product-price">{{slotProps.data.pvp_item}}</span>
-                          <Button icon="pi pi-shopping-cart"></Button>
+                      </template>
+                      <template #grid="slotProps">
+                        <div class="col-12 md:col-3">
+                          <div class="product-grid-item card">
+                            <div class="product-grid-item-top">
+                              <div>
+                                <i class="pi pi-tag product-category-icon"></i>
+                                <span class="product-category">{{slotProps.data.marca_producto}}</span>
+                              </div>
+                              <span class="product-badge status-instock">En Stock</span>
+                            </div>
+                            <div class="product-grid-item-content">
+                              <img :src="`http://10.147.17.173:5002/productos/images/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
+                              <div class="product-name">{{slotProps.data.nombre_producto}}</div>
+                            </div>
+                            <div class="product-grid-item-bottom">
+                              <span class="product-price">{{slotProps.data.pvp_item}}</span>
+                              <Button  @click="addToCart(slotProps.data.id_producto)" icon="pi pi-shopping-cart"></Button>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </template>
-                </DataView>
-              </div>
+                      </template>
+                    </DataView>
+                  </div>
+                </div>
+                <div v-else class="no-result col-12 lg:col-10 content-section layout-content" >
+                  <div class="flex" style="flex-direction:column">
+                    <span class="text-center font-medium">Resultados no encontrados para: {{this.texto}}</span>
+                    <img src="https://www.ecommerce-nation.com/wp-content/uploads/2017/08/How-to-Give-Your-E-Commerce-No-Results-Page-the-Power-to-Sell.png" >
+                  </div>
+                </div>
             </div>
           </div>
         </section>
@@ -163,7 +171,7 @@
 </template>
 
 <script>
-  import { ref } from 'vue'
+ import { ref as ref2} from 'vue'
   import {
     Dialog,
     DialogPanel,
@@ -177,8 +185,16 @@
   import { FilterIcon, MinusSmIcon, PlusSmIcon, } from '@heroicons/vue/solid'
   import { required } from "@vuelidate/validators"
   import { useVuelidate } from "@vuelidate/core"
+  import { initializeApp } from 'firebase/app'
+  import { getDatabase, ref , push, update, get} from 'firebase/database'
+  import { getAccessToken, getUser } from '../services/auth';
+  import { useCartStore } from '../stores/carrito'
   import Details from '../components/details.vue'
-  
+  import config from '../services/config'
+
+  var app = initializeApp(config);
+  var db = getDatabase(app)
+
   export default {
     components: {
       Dialog,
@@ -196,9 +212,10 @@
     },
 
     setup() {
-      const mobileFiltersOpen = ref(false)
+      const mobileFiltersOpen = ref2(false)
+      const cartStore = useCartStore()
       const v$ = useVuelidate()
-      return { mobileFiltersOpen, v$}
+      return { mobileFiltersOpen, v$ ,cartStore}
     },
 
     data() {
@@ -206,13 +223,14 @@
         open:false,
         mostrar:true,
         submitted: false,
+        vacio:false,
         textoBuscar:'',
         texto:'',
         productos: [],
         productos2:[],
         marcas:[],
         marcasSeleccionadas:[],
-        layout: 'grid',
+        layout: 'list',
         id:null,
         sortKey: null,
         sortOrder: null,
@@ -256,6 +274,7 @@
       },
       
       async buscarProductos(texto){
+        this.vacio=false
         await this.axios.get(`http://10.147.17.173:5002/productos/public/findByWord/${texto}`
         ).then((response) => {
           if(response.data !=null){
@@ -271,6 +290,7 @@
           }
           else{
             this.productos=[]
+            this.vacio=true
           }
         }).catch (e => {
           this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
@@ -293,8 +313,10 @@
 
       buscarMarca(marcas){
         var coincidencias = []
+        var productosCopia = []
         this.buscarFiltrados(this.textoBuscar)
-        var productosCopia = this.productos2
+        productosCopia = this.productos2
+        console.log(productosCopia)
         if(marcas.length !=0){
           for (let i = 0; i < productosCopia.length; i++) {
             if(marcas.includes(productosCopia[i].marca_producto)){
@@ -330,12 +352,91 @@
           this.sortField = value;
           this.sortKey = sortValue;
         }
-      }
+      },
+      addToCart(id){
+        var ident =''
+        if( getAccessToken() == null)
+          ident = localStorage.getItem('ID')
+        else
+          ident = getUser()
+        var carritoUser = ref(db, 'carrito/'+ ident)
+
+        const promesa2 = this.getDetalleProducto(id)
+        promesa2.then(
+          response => {
+            const stock = response
+            var promesa = this.verificarExistencia(carritoUser, id)
+            promesa.then(
+              result => {
+                if(result){
+                  if(result.cantidad +1 <= stock){
+                    var articuloRef = ref(db, 'carrito/'+ ident + '/' +result.key)
+                    update(articuloRef,{
+                      cantidad : result.cantidad + 1
+                    })
+                    this.terminarCompra()
+                  }else{
+                    this.$toast.add({severity:'error', summary:'Error', detail: 'Cantidad agregada fuera de stock', life: 3000})
+                  }
+                }else{
+                  push(carritoUser,{
+                    cantidad:1,
+                    id: id
+                  })
+                  this.terminarCompra()
+                }
+              }
+            )
+          }
+        )
+	  	},
+
+      terminarCompra(){
+        this.cartStore.getNumber()
+        this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
+      },
+
+      verificarExistencia(ref, id){
+        var productosExistentes = []
+        const valor = get(ref).then((snapshot) => {
+          snapshot.forEach(function (childSnapshot) {  
+            var value = childSnapshot.val()
+            var id ={
+              key : childSnapshot.key,
+              id: value.id,
+              cantidad: value.cantidad
+            }
+            productosExistentes.push(id)
+          })
+          for (let i = 0; i < productosExistentes.length; i++) {
+            if(id == productosExistentes[i].id)
+              return productosExistentes[i]
+          }
+        })
+        return valor
+      },
+
+      async getDetalleProducto(id){
+			  const valor = await this.axios.get(`http://10.147.17.173:5002/detalleProducto/venta/findById/${id}`
+        ).then(response => {
+          const stock = response.data.cantidad_producto
+				  return stock
+        })
+        .catch(e => {
+          this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
+        })
+			  return valor
+      },
     }
 }
 </script>
 
 <style lang="scss" scoped>
+  .no-result{
+    display:flex;
+    justify-content: center;
+    align-content: center;
+  }
   .search{
     width: 260px;
   }

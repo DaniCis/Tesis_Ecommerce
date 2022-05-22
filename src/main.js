@@ -29,6 +29,7 @@ import Skeleton from 'primevue/skeleton'
 import Avatar from 'primevue/avatar'
 import Dialog from 'primevue/dialog'
 import Badge from 'primevue/badge'
+import RadioButton from 'primevue/radiobutton'
 
 
 const app = createApp(App)
@@ -56,5 +57,6 @@ app.component('Skeleton', Skeleton)
 app.component('Avatar',Avatar)
 app.component('Dialog2',Dialog)
 app.component('Badge',Badge)
+app.component('RadioButton', RadioButton)
 
 app.mount('#app')

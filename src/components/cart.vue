@@ -64,7 +64,7 @@
                       <p>Subtotal</p>
                       <p>${{subtotal}}</p>
                     </div>
-                    <div class="mt-5">
+                    <div class="mt-4">
                       <router-link to='/checkout' @click="closeCart" class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Checkout</router-link>
                     </div>
                     <div class="mt-4 flex justify-center text-center text-sm text-gray-500">
@@ -184,6 +184,7 @@
             precio : (response.data.pvp_item.slice(1)*cantidad).toFixed(2),
             imagen : response.data.imagen_producto[0],
             stock: response.data.cantidad_producto,
+            descuento: response.data.descuentoPorcentaje_item,
             cantidad : cantidad,
             key:key,
           }

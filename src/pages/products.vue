@@ -25,7 +25,7 @@
 								<img :src="`http://10.147.17.173:5002/productos/images_medium/${slotProps.data.id_producto}/${slotProps.data.imagen_producto[0]}`" :alt="slotProps.data.nombre_producto" @click="openModal(slotProps.data.id_producto)"/>
 								<div class="product-list-detail">
 									<div class="product-name">{{slotProps.data.nombre_producto}}</div>
-									<i class="pi pi-tag product-category-icon"></i><span class="product-category">Nuevo</span>
+									<i class="pi pi-tag product-category-icon"></i><span class="product-category">{{slotProps.data.marca_producto}}</span>
 								</div>
 								<div class="product-list-action">
 									<div v-if="slotProps.data.descuentoPorcentaje_item==0">
@@ -47,7 +47,7 @@
 								<div class="product-grid-item-top">
 									<div>
 										<i class="pi pi-tag product-category-icon"></i>
-										<span class="product-category">Nuevo</span>
+										<span class="product-category">{{slotProps.data.marca_producto}}</span>
 									</div>
 									<span class="product-badge status-instock">En Stock</span>
 								</div>
@@ -114,6 +114,7 @@ export default {
             ).then(response => {
                 if(response.data !=null){
 					this.temp = response.data
+					console.log(this.temp)
 					for (let i = 0; i < this.temp.length; i++) {
 						if(this.temp[i].descuentoPorcentaje_item != 0 ){
 							var descuento = (parseFloat(this.temp[i].descuentoPorcentaje_item))/100
@@ -128,7 +129,8 @@ export default {
 							nombre_producto: this.temp[i].nombre_producto,
 							imagen_producto: this.temp[i].imagen_producto,
 							descuentoPorcentaje_item: this.temp[i].descuentoPorcentaje_item,
-							precioDescuento_producto : precioFinal
+							precioDescuento_producto : precioFinal,
+                			marca_producto:this.temp[i].marca_producto
 						}
 						this.products.push(contenido)
 					}

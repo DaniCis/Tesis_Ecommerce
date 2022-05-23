@@ -7,15 +7,16 @@
       </div>
       <p class="text-xs truncate text-gray-600">Cant. {{item.cantidad}}</p>
       <span class="text-sm text-gray-900">$ {{ item.precio}}</span>
+      <p v-if="item.descuento !=0" class="text-xs truncate text-red-400 mt-1">Desct. %{{item.descuento}}</p>
     </div>
   </div>
 </template>
 
 <script>
     export default {
-    name: "Item",
-    props: {
+      name: "Item",
+      props: {
         item: Object
-    }
+      }
     };
 </script>

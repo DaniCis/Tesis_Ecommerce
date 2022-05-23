@@ -7,7 +7,6 @@ import Search from './pages/search.vue'
 import Checkout from './pages/checkout.vue'
 import Products from './pages/products.vue'
 import Summary from './pages/orderSummary.vue'
-import copyRegister from './pages/copyRegister.vue'
 
 const routes = [
     { name:"main",path: "/", component:Principal },
@@ -15,7 +14,6 @@ const routes = [
     { path: "/register", component:Register },
     { path: "/search", component:Search},
     { path: "/products", component:Products},
-    { path:"/copyRegister", component: copyRegister},
     { path: "/checkout", 
       component:Checkout, 
       meta:{

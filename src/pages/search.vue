@@ -89,7 +89,7 @@
                       <label :for="optionIdx" class="ml-2 text-sm text-gray-600"> {{ option.label }}</label>
                     </div>
                   </div>
-                 <Button class="mt-6 p-button-info" label="Buscar" @click='buscarMarca(marcasSeleccionadas)' ></Button>
+                 <Button class="mt-6 p-button-info" label="Buscar" @click='buscarMarca(marcasSeleccionadas,this.textoBuscar)' ></Button>
                 </DisclosurePanel>
               </Disclosure>
             </form>
@@ -265,7 +265,7 @@
       handleSubmit(isFormValid) {
         this.submitted = true
         if (!isFormValid) {
-            return
+          return
         }
         this.buscar()
       },
@@ -306,18 +306,12 @@
                 nombre_producto: this.temp[i].nombre_producto,
                 imagen_producto: this.temp[i].imagen_producto,
                 descuentoPorcentaje_item: this.temp[i].descuentoPorcentaje_item,
-                precioDescuento_producto : precioFinal
+                precioDescuento_producto : precioFinal,
+                marca_producto:this.temp[i].marca_producto
               }
               this.productos.push(contenido)
             }
-            for (var i = 0; i < this.productos.length; i++) {
-              var marca = {
-                value: this.productos[i].marca_producto,
-                label: this.productos[i].marca_producto,
-                checked:true
-              }
-              this.marcas.push(marca)
-            }
+            this.obtenerMarcas(this.productos)
           }
           else{
             this.productos=[]
@@ -328,7 +322,22 @@
         })
       },
       
-      async buscarFiltrados(texto){
+      obtenerMarcas(productos){
+        for (var i = 0; i < productos.length; i++) {
+          var marca = {
+            value: productos[i].marca_producto,
+            label: productos[i].marca_producto,
+            checked:true
+          }
+          this.marcas.push(marca)
+        }
+      },
+
+      async buscarMarca(marcas,texto){
+        this.vacio=false
+        this.productos = []
+        this.productos2 =[]
+        var coincidencias = []
         await this.axios.get(`http://10.147.17.173:5002/productos/public/findByWord/${texto}`
         ).then((response) => {
           if(response.data !=null){
@@ -347,34 +356,29 @@
                 nombre_producto: this.temp[i].nombre_producto,
                 imagen_producto: this.temp[i].imagen_producto,
                 descuentoPorcentaje_item: this.temp[i].descuentoPorcentaje_item,
-                precioDescuento_producto : precioFinal
+                precioDescuento_producto : precioFinal,
+                marca_producto:this.temp[i].marca_producto
               }
               this.productos2.push(contenido)
             }
           }
           else{
             this.productos2=[]
+            this.vacio=true
           }
         }).catch (e => {
           this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
         })
-      },
 
-      buscarMarca(marcas){
-        var coincidencias = []
-        var productosCopia = []
-        this.buscarFiltrados(this.textoBuscar)
-        productosCopia = this.productos2
-        console.log(productosCopia)
         if(marcas.length !=0){
-          for (let i = 0; i < productosCopia.length; i++) {
-            if(marcas.includes(productosCopia[i].marca_producto)){
-              coincidencias.push(productosCopia[i])
+          for (let i = 0; i < this.productos2.length; i++) {
+            if(marcas.includes(this.productos2[i].marca_producto)){
+              coincidencias.push(this.productos2[i])
             }
           }
           this.productos = coincidencias
         }else
-        this.productos = productosCopia
+        this.productos = this.productos2
       },
 
       openModal(id){

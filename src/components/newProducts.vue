@@ -114,7 +114,7 @@ export default {
     },
     methods: {
         async getProducts(){
-            await this.axios.get('http://10.147.17.173:5002/productos/public'
+            await this.axios.get('http://10.147.17.173:5002/public/productosNuevos'
             ).then(response => {
                 if(response.data !=null){
 					this.temp = response.data

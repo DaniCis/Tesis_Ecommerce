@@ -227,8 +227,7 @@ export default {
       await this.axios.post('http://10.147.17.173:5004/public/ventas', params,{ headers:{ Authorization: 'Bearer ' + getAccessToken() }
       }).then((response) => {
         console.log(response.data)
-
-
+        this.vaciarCarrito()
         this.$toast.add({severity:'success', summary: 'Venta registrada con éxito', life: 3000})
         setTimeout(()=>{
           this.$router.push({

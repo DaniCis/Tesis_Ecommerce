@@ -98,7 +98,7 @@
                   <label class="ml-4 text-700">999999999</label>
                 </div>
               </div>
-              <Button class="w-full text-center px-4 py-3 bg-blue-500 rounded-md shadow-md text-white font-semibold" @click="confirmarCompra(999999999)" label="Confirmar Compra" ></Button>
+              <Button class="w-full text-center px-4 py-3 bg-blue-500 rounded-md shadow-md text-white font-semibold" @click="confirmarCompra(3)" label="Confirmar Compra" ></Button>
             </form>
           </div>
         </div>
@@ -135,7 +135,7 @@
 import Item from "../components/item.vue";
 import {required, maxLength } from "@vuelidate/validators"
 import { useVuelidate } from "@vuelidate/core"
-import { getUser } from '../services/auth'
+import { getUser, getAccessToken } from '../services/auth'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, ref , get,} from 'firebase/database'
 import config from '../services/config'
@@ -183,6 +183,7 @@ export default {
       total:null,
       precios:[],
       descuentos:[],
+      detalles:[],
     }
   },
 
@@ -202,13 +203,41 @@ export default {
 
   methods: {
     confirmarCompra(id){
-      console.log(id)
+      console.log(this.productos)
+      for (let i = 0; i < this.productos.length; i++) {
+        var detalle ={
+          cantidad_detalleVenta: this.productos[i].cantidad,
+          productos_id_producto: this.productos[i].id
+        }
+        this.detalles.push(detalle)
+      }
+      console.log(this.detalles)
+      var params = {
+        total_venta: parseFloat(this.total).toFixed(2),
+        subtotal_venta:parseFloat(this.subtotal).toFixed(2),
+        descuento_venta: parseFloat(this.descuento).toFixed(2),
+        clientes_id_cliente: id,
+        detalle_venta: this.detalles
+      }
+      console.log(params)
+      /*await axios.post('http://10.147.17.173:5004/ventas', params,{ headers:{ Authorization: 'Bearer ' + getAccessToken() }
+      }).then(() => {
+        //this.$toast.success('Venta creada con éxito')
+        this.$router.push({
+          path:"/ordenSummary",
+          params:{
+            id:
+          }
+        });
+      }).catch (e => {
+        //this.$toast.error(e.response.data.detail)
+      })*/
     },
 
     handleSubmit(isFormValid) {
       this.submitted = true
       if (!isFormValid)
-          return
+        return
       this.verificarCliente(this.ident)
     },
 
@@ -223,8 +252,8 @@ export default {
 
     async verificarCliente(ident){
       this.mostrar=false
-      await this.axios.get(`http://10.147.17.173:5004/public/clientes/findByIdentificacion/${ident}`
-      ).then(response => {
+      await this.axios.get(`http://10.147.17.173:5004/public/clientes/findByIdentificacion/${ident}`,{ headers:{ Authorization: 'Bearer ' + getAccessToken() }
+      }).then(response => {
         if(response.data !=null){
           this.existe = true
           this.nombre = response.data.nombre_cliente
@@ -261,8 +290,8 @@ export default {
         telefono_cliente: (this.telf).toString(),
         correo_cliente: this.correo.trim(),
       }
-      await this.axios.post(`http://10.147.17.173:5004/ecommerce/clientes`, params
-      ).then(() => {
+      await this.axios.post(`http://10.147.17.173:5004/ecommerce/clientes`, params,{ headers:{ Authorization: 'Bearer ' + getAccessToken() }
+      }).then(() => {
         this.$toast.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado con éxito', life: 3000})
         this.existe = true
         this.crearNuevo = false

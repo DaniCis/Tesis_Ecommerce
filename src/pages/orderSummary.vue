@@ -8,8 +8,23 @@
                     <img class="w-full md:hidden" src="https://i.ibb.co/sbV9CD2/Rectangle-19.png" alt="wardrobe " />
                 </div>
                 <div class="flex justify-center flex-col items-start w-full lg:w-9/12 xl:w-full">
-                    <h3 class="text-3xl xl:text-4xl dark:text-white font-semibold leading-7 xl:leading-9 w-full md:text-left text-gray-800">Order Summary</h3>
-                    <p class="text-base leading-none dark:text-white mt-4 text-gray-800">Paid using credit card ending with <span class="font-semibold">8822</span></p>
+                    <h3 class="text-3xl xl:text-4xl dark:text-white font-semibold leading-7 xl:leading-9 w-full md:text-left text-gray-800">Order No.</h3>
+                    <div class="flex flex-col flex-col justify-start items-start mt-8 xl:mt-6 space-y-10 w-full">
+                        <div class="flex justify-start items-start flex-col md:flex-row w-full md:w-auto space-y-8 md:space-y-0 md:space-x-14 xl:space-x-8 lg:w-full">
+                            <div class="flex jusitfy-start items-start flex-col space-y-2">
+                                <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Billing Address</p>
+                                <p class="text-sm leading-5 dark:text-gray-300 text-gray-600">180 North King Street, Northhampton MA 1060</p>
+                            </div>
+                            <div class="flex jusitfy-start items-start flex-col space-y-2">
+                                <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Shipping Address</p>
+                                <p class="text-sm leading-5 dark:text-gray-300 text-gray-600">180 North King Street, Northhampton MA 1060</p>
+                            </div>
+                            <div class="flex jusitfy-start items-start flex-col space-y-2">
+                                <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Shipping Method</p>
+                                <p class="text-sm leading-5 dark:text-gray-300 text-gray-600">DHL - Takes up to 3 working days</p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="flex justify-center items-center w-full mt-8 flex-col space-y-4">
                         <div class="flex md:flex-row justify-start items-start md:items-center border border-gray-200 w-full">
                             <div class="-m-px w-40 md:w-32">
@@ -66,21 +81,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex flex-col flex-col justify-start items-start mt-8 xl:mt-10 space-y-10 w-full">
-                        <div class="flex justify-start items-start flex-col md:flex-row w-full md:w-auto space-y-8 md:space-y-0 md:space-x-14 xl:space-x-8 lg:w-full">
-                            <div class="flex jusitfy-start items-start flex-col space-y-2">
-                                <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Billing Address</p>
-                                <p class="text-sm leading-5 dark:text-gray-300 text-gray-600">180 North King Street, Northhampton MA 1060</p>
-                            </div>
-                            <div class="flex jusitfy-start items-start flex-col space-y-2">
-                                <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Shipping Address</p>
-                                <p class="text-sm leading-5 dark:text-gray-300 text-gray-600">180 North King Street, Northhampton MA 1060</p>
-                            </div>
-                            <div class="flex jusitfy-start items-start flex-col space-y-2">
-                                <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Shipping Method</p>
-                                <p class="text-sm leading-5 dark:text-gray-300 text-gray-600">DHL - Takes up to 3 working days</p>
-                            </div>
-                        </div>
+                    <div class="flex flex-col flex-col justify-start items-start mt-8 xl:mt-6 space-y-10 w-full">
                         <div class="flex flex-col w-full space-y-4 w-full">
                             <div class="flex justify-center items-center w-full space-y-4 flex-col border-gray-200 border-b pb-4">
                                 <div class="flex justify-between w-full">
@@ -116,10 +117,17 @@
 
 <script>
 export default {
+    data(){
+        return{
 
+        }
+    },
+    mounted(){
+        var idVenta = this.$route.params.id;
+    },
+    methods:{
+
+    }
 }
 </script>
 
-<style>
-
-</style>

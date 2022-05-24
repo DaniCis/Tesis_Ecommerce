@@ -9,7 +9,7 @@ import Products from './pages/products.vue'
 import Summary from './pages/orderSummary.vue'
 
 const routes = [
-    { name:"main",path: "/", component:Principal },
+    { path: "/", component:Principal },
     { path: "/login", component: Login },
     { path: "/register", component:Register },
     { path: "/search", component:Search},
@@ -20,7 +20,7 @@ const routes = [
         requiresAuth: true
       },
     },
-    { path: "/orderSummary", 
+    { path: "/orderSummary/:id", 
       component: Summary, 
       meta:{
         requiresAuth: true

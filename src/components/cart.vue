@@ -86,7 +86,7 @@
   import { XIcon } from '@heroicons/vue/outline'
   import { initializeApp } from 'firebase/app'
   import { getDatabase, ref , get, remove, update} from 'firebase/database'
-  import { getAccessToken, getUser } from '../services/auth';
+  import { getAccessToken, getUser } from '../services/auth'
   import { useCartStore } from '../stores/carrito'
   import config from '../services/config'
 

@@ -118,7 +118,6 @@
                         var carritoNew = ref(db, "carrito/"+ username)
                         get(carritoNew).then((snapshot) => {
                             if(snapshot.exists()){
-                                //existen productos en el carrito del usuario
                                 snapshot.forEach(function (childSnapshot) {  
                                     var value = childSnapshot.val()
                                     var producto ={
@@ -141,7 +140,6 @@
                                     }
                                 }
                             }else{
-                                //no hay productos anteriores.Copiar solo de sesion
                                 for (let i = 0; i < carritoSesion.length; i++) {
                                     push(carritoNew,{
                                         cantidad: carritoSesion[i].cantidad,
@@ -150,13 +148,13 @@
                                 }
                             }
                         })
-
-                        this.quitarCarritoAnterior()
-                        localStorage.removeItem('ID')
                     }else{
                         this.productos = []
                     }
+                    this.quitarCarritoAnterior()
                     this.cartStore.getNumber()
+                    localStorage.removeItem('ID')
+                    localStorage.removeItem('ID_exp')
                 })
             },
 

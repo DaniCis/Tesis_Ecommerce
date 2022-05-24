@@ -116,7 +116,7 @@
         </div>
         <div class="grid" style="justify-content:flex-end">
           <span class="col-4 text-sm font-semibold text-gray-900">Descuento:</span>
-          <span class="col-2 text-sm">${{this.descuento}}</span>  
+          <span class="col-2 text-sm">-${{this.descuento}}</span>  
         </div>  
         <div class="grid" style="justify-content:flex-end">
           <span class="col-4 text-sm font-semibold text-gray-900">IVA %12:</span>
@@ -132,8 +132,10 @@
 </template>
 
 <script>
-import Item from "../components/item.vue";
-import {required, maxLength } from "@vuelidate/validators"
+import Item from "../components/item.vue"
+import { mapState } from 'pinia'
+import { useCartStore } from '../stores/carrito'
+import { required, maxLength } from "@vuelidate/validators"
 import { useVuelidate } from "@vuelidate/core"
 import { getUser, getAccessToken } from '../services/auth'
 import { initializeApp } from 'firebase/app'
@@ -145,12 +147,13 @@ var db = getDatabase(app)
 
 export default {
   name: "CheckoutPage",
+  components: {Item},
 
-  components: {
-    Item
+  setup() {
+    const v$ = useVuelidate()
+    const cartStore = useCartStore()
+    return { v$, cartStore }
   },
-
-  setup: () => ({ v$: useVuelidate() }),
 
   data() {
     return {
@@ -187,6 +190,10 @@ export default {
     }
   },
 
+  computed:{
+    ...mapState(useCartStore, ["numberItems"]) 
+  },
+
   mounted() {
     this.cargarItems()
   },
@@ -202,8 +209,7 @@ export default {
   },
 
   methods: {
-    confirmarCompra(id){
-      console.log(this.productos)
+    async confirmarCompra(id){
       for (let i = 0; i < this.productos.length; i++) {
         var detalle ={
           cantidad_detalleVenta: this.productos[i].cantidad,
@@ -211,7 +217,6 @@ export default {
         }
         this.detalles.push(detalle)
       }
-      console.log(this.detalles)
       var params = {
         total_venta: parseFloat(this.total).toFixed(2),
         subtotal_venta:parseFloat(this.subtotal).toFixed(2),
@@ -219,19 +224,31 @@ export default {
         clientes_id_cliente: id,
         detalle_venta: this.detalles
       }
-      console.log(params)
-      /*await axios.post('http://10.147.17.173:5004/ventas', params,{ headers:{ Authorization: 'Bearer ' + getAccessToken() }
-      }).then(() => {
-        //this.$toast.success('Venta creada con éxito')
-        this.$router.push({
-          path:"/ordenSummary",
-          params:{
-            id:
-          }
-        });
+      await this.axios.post('http://10.147.17.173:5004/public/ventas', params,{ headers:{ Authorization: 'Bearer ' + getAccessToken() }
+      }).then((response) => {
+        console.log(response.data)
+
+
+        this.$toast.add({severity:'success', summary: 'Venta registrada con éxito', life: 3000})
+        setTimeout(()=>{
+          this.$router.push({
+            path:"/ordenSummary",
+            params:{
+              id: response.data.id_venta
+            }
+          })
+        }, 3000)
+
       }).catch (e => {
-        //this.$toast.error(e.response.data.detail)
-      })*/
+        this.$toast.add({severity:'Error', summary:'Error', detail: e.response.data.detail, life: 3000})
+      })
+    },
+    
+    vaciarCarrito(){
+      var ident = getUser()
+      var carritoRef = ref(db, "carrito/"+ ident)
+      remove(carritoRef)
+      this.cartStore.getNumber()
     },
 
     handleSubmit(isFormValid) {

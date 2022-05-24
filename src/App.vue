@@ -16,7 +16,7 @@
   import CheckToken from "./components/checkToken.vue"
   import { useAuthStore } from './stores/auth'
   import { mapState } from 'pinia'
-  import { v4 as uuidv4 } from 'uuid';
+  import { v4 as uuidv4 } from 'uuid'
 
   export default{
     components: { Header, Principal, Footer, CheckToken},

@@ -191,6 +191,7 @@
       close(){
         this.displayConfirmation = false
         this.logout
+        this.cartStore.getNumber()
       }
     }
   }

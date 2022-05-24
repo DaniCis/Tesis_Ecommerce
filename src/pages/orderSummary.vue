@@ -3,11 +3,11 @@
         <div class="2xl:container 2xl:mx-auto py-14 px-4 md:px-6 xl:px-20">
             <div class="flex flex-col xl:flex-row justify-center items-center space-y-10 xl:space-y-0 xl:space-x-8">
                 <div class="w-full lg:w-9/12 xl:w-full">
-                    <img class="w-full hidden md:block " src="https://i.ibb.co/ZhjHb0R/Rectangle-19-2.png" alt="wardrobe " />
-                    <img class="w-full md:hidden" src="https://i.ibb.co/sbV9CD2/Rectangle-19.png" alt="wardrobe " />
+                    <img class="w-full hidden md:block " src="https://images.unsplash.com/photo-1581067721837-e4809b29692d?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8c2hvcHBpbmclMjBiYWd8ZW58MHwyfDB8fA%3D%3D&auto=format&fit=crop&w=500" alt="wardrobe " />
+                    <img class="w-full md:hidden" src="https://images.unsplash.com/photo-1581067721837-e4809b29692d?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=60&raw_url=true&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8c2hvcHBpbmclMjBiYWd8ZW58MHwyfDB8fA%3D%3D&auto=format&fit=crop&w=500" alt="wardrobe " />
                 </div>
                 <div class="flex justify-center flex-col items-start w-full lg:w-9/12 xl:w-full ml-6 mr-6">
-                    <h3 class="text-2xl xl:text-3xl dark:text-white font-semibold leading-7 xl:leading-9 w-full md:text-left text-gray-800">Orden de Venta No.{{this.numeroComprobante}}</h3>
+                    <h3 class="text-2xl xl:text-3xl dark:text-white font-semibold leading-7 xl:leading-9 w-full md:text-left text-gray-800">Orden de Compra No.{{this.numeroComprobante}}</h3>
                     <div class="flex flex-col flex-col justify-start items-start mt-4 xl:mt-6 space-y-10 w-full">
                         <div class="flex justify-start items-start flex-col md:flex-row w-full md:w-auto space-y-8 md:space-y-0 md:space-x-14 xl:space-x-8 lg:w-full">
                             <div class="flex jusitfy-start items-start flex-col space-y-2">
@@ -27,7 +27,7 @@
                     <div class="flex justify-center items-center w-full mt-6 flex-col space-y-4" style="overflow-x: hidden; overflow-y: auto;max-height:200px">
                         <div v-for="product in this.detalles" :key="product.id_producto" class="flex md:flex-row justify-start items-start md:items-center border border-gray-200 w-full">
                             <div class="ml-4">
-                                <img class="hidden md:block" :src="`http://10.147.17.173:5002/productos/images_small/${product.id_producto}/${product.imagen_producto[0]}`" :alt="product.nombre_producto"/>
+                                <img class="mt-5 md:mt-0" :src="`http://10.147.17.173:5002/productos/images_small/${product.id_producto}/${product.imagen_producto[0]}`" :alt="product.nombre_producto"/>
                             </div>
                             <div class="flex justify-start md:justify-between items-start md:items-center flex-col md:flex-row w-full p-4 md:px-4">
                                 <div class="flex flex-col md:flex-shrink-0 justify-start items-start">
@@ -37,7 +37,7 @@
                                         <p v-if="product.descuentoPorcentaje_detalleVenta!=0" class="text-sm leading-none dark:text-gray-300 text-gray-600">Desct: %<span class="text-gray-800 dark:text-white">{{product.descuentoPorcentaje_detalleVenta}}</span></p>
                                     </div>
                                 </div>
-                                <div class="flex mt-4 md:mt-0 md:justify-end items-center w-full">
+                                <div class="flex mt-3 md:mt-0 md:justify-end items-center w-full">
                                     <p class="dark:text-white text-1xl font-semibold leading-5 lg:leading-6 text-gray-800">{{product.precio_detalleVenta}}</p>
                                 </div>
                             </div>

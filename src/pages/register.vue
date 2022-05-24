@@ -5,8 +5,8 @@
             <div class="text-center mb-5">
                 <i class="pi pi-user mb-3" style="font-size: 1.5rem"></i>
                 <div class="text-900 text-2xl font-medium mb-3">Registrarse</div>
-                <span class="text-600 font-medium line-height-3">Ya tienes una cuenta?</span>
-                <router-link to="/login" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Inicia sesión</router-link>
+                <span class="text-600 font-medium line-height-3">Ya tienes una cuenta?</span><br>
+                <router-link to="/login" class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Inicia sesión aqui</router-link>
             </div>
             <div>
                 <form @submit.prevent="handleSubmit(!v$.$invalid)" class="p-fluid">
@@ -105,7 +105,7 @@
     .layout-content{
         display: flex;
         justify-content: center;
-        //background-image: url('https://wallpaperaccess.com/full/295694.jpg');
+        background-image: url('../assets/images/background.jpg');
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;

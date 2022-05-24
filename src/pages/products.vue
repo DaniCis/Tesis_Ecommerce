@@ -79,6 +79,8 @@
 import Details from '../components/details.vue'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, ref , get, push} from 'firebase/database'
+import { getUser, getAccessToken } from '../services/auth'
+import { useCartStore } from '../stores/carrito'
 import config from '../services/config'
 
 var app = initializeApp(config);
@@ -87,6 +89,10 @@ var db = getDatabase(app)
 export default {
 
 	components:{Details},
+	setup() {
+		const cartStore = useCartStore()
+		return { cartStore }
+	},
     data() {
         return { 
 			open:false,
@@ -114,7 +120,6 @@ export default {
             ).then(response => {
                 if(response.data !=null){
 					this.temp = response.data
-					console.log(this.temp)
 					for (let i = 0; i < this.temp.length; i++) {
 						if(this.temp[i].descuentoPorcentaje_item != 0 ){
 							var descuento = (parseFloat(this.temp[i].descuentoPorcentaje_item))/100
@@ -202,6 +207,18 @@ export default {
 			})
 			return valor
 		},
+
+		async getDetalleProducto(id){
+			const valor = await this.axios.get(`http://10.147.17.173:5002/detalleProducto/venta/findById/${id}`
+            ).then(response => {
+                const stock = response.data.cantidad_producto
+				return stock
+            })
+            .catch(e => {
+                this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail, life: 3000});
+            })
+			return valor
+        },
 
 		openModal(id){
 			this.id = id

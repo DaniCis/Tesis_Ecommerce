@@ -2,7 +2,7 @@
   <div class="container mx-auto p-6 grid col-12">
     <Toast />
     <div class="col-12 lg:col-6">
-      <h4 class="text-2xl text-gray-500 mb-5">Orden de Venta</h4>
+      <h4 class="text-2xl text-gray-500 mb-5">Orden de Compra</h4>
       <div class="rounded-md bg-white grid p-2 mb-4">
           <div class="col-6 lg:col-4 field-radiobutton">
               <RadioButton id="op1" value="datos" v-model="opcionOrden" />
@@ -105,9 +105,9 @@
       </div>
     </div>
     <div class="col-12 lg:col-5 ">
-      <h4 class="text-2xl text-gray-500 mb-5">Resumen de Compra</h4>
+      <h4 class="text-2xl text-gray-500 mb-5 ">Resumen</h4>
       <div class="p-10 rounded-md shadow-md bg-white">
-        <div class="mb-3" style="overflow-x: hidden; overflow-y: auto;max-height:24rem">
+        <div class="mb-3 border-gray-200 border-b" style="overflow-x: hidden; overflow-y: auto;max-height:24rem">
           <Item :key="i" v-for="(item, i) in this.productos" :item="item"  />
         </div>
         <div class="grid" style="justify-content:flex-end">

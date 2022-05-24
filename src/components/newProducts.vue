@@ -80,7 +80,7 @@ import Details from './details.vue'
 import config from '../services/config'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, ref , push, update, get} from 'firebase/database'
-import { getAccessToken, getUser } from '../services/auth';
+import { getAccessToken, getUser } from '../services/auth'
 import { useCartStore } from '../stores/carrito'
 
 var app = initializeApp(config);

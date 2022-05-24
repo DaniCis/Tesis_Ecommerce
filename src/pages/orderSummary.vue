@@ -7,13 +7,9 @@
                     <img class="w-full md:hidden" src="https://i.ibb.co/sbV9CD2/Rectangle-19.png" alt="wardrobe " />
                 </div>
                 <div class="flex justify-center flex-col items-start w-full lg:w-9/12 xl:w-full ml-6 mr-6">
-                    <h3 class="text-2xl xl:text-3xl dark:text-white font-semibold leading-7 xl:leading-9 w-full md:text-left text-gray-800">Orden de Venta No.{{this.idVenta}}</h3>
+                    <h3 class="text-2xl xl:text-3xl dark:text-white font-semibold leading-7 xl:leading-9 w-full md:text-left text-gray-800">Orden de Venta No.{{this.numeroComprobante}}</h3>
                     <div class="flex flex-col flex-col justify-start items-start mt-4 xl:mt-6 space-y-10 w-full">
                         <div class="flex justify-start items-start flex-col md:flex-row w-full md:w-auto space-y-8 md:space-y-0 md:space-x-14 xl:space-x-8 lg:w-full">
-                            <div class="flex jusitfy-start items-start flex-col space-y-2">
-                                <p class="text-base dark:text-white font-semibold leading-4 text-gray-800"># Comprobante</p>
-                                <p class="text-sm leading-5 dark:text-gray-300 text-gray-600">{{this.numeroComprobante}}</p>
-                            </div>
                             <div class="flex jusitfy-start items-start flex-col space-y-2">
                                 <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Nombre</p>
                                 <p class="text-sm leading-5 dark:text-gray-300 text-gray-600">{{this.nombreCliente}}</p>

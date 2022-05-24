@@ -172,10 +172,10 @@ export default {
 
         terminarCompra(){
             this.cartStore.getNumber()
-            this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 3000})
+            this.$toast.add({severity:'success', detail: 'Producto añadido al carrito de compras', life: 2000})
             setTimeout(()=>{
                 this.closeModal()
-            }, 3000)
+            }, 2000)
         },
 
         verificarExistencia(ref, id){

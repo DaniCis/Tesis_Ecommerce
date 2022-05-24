@@ -139,7 +139,7 @@ import { required, maxLength } from "@vuelidate/validators"
 import { useVuelidate } from "@vuelidate/core"
 import { getUser, getAccessToken } from '../services/auth'
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref , get,} from 'firebase/database'
+import { getDatabase, ref , get, remove } from 'firebase/database'
 import config from '../services/config'
 
 var app = initializeApp(config);
@@ -226,15 +226,12 @@ export default {
       }
       await this.axios.post('http://10.147.17.173:5004/public/ventas', params,{ headers:{ Authorization: 'Bearer ' + getAccessToken() }
       }).then((response) => {
-        console.log(response.data)
-        this.vaciarCarrito()
+        const idVenta= response.data
         this.$toast.add({severity:'success', summary: 'Venta registrada con éxito', life: 3000})
+        this.vaciarCarrito()
         setTimeout(()=>{
           this.$router.push({
-            path:"/ordenSummary",
-            params:{
-              id: response.data.id_venta
-            }
+            path:"/orderSummary/"+idVenta,
           })
         }, 3000)
 

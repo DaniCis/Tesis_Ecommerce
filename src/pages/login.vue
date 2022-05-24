@@ -73,6 +73,7 @@
                 }
                 this.login()
             },
+
             async login() {
                 const formData = new FormData();
                 const user = this.user.trim()
@@ -86,7 +87,7 @@
                     this.authStore.setToken(response.data.access_token)
                     this.authStore.setUser()
                     this.verificarCarrito(user)
-                    this.$router.push('/');
+                    this.$router.push('/')
                 }
                 }).catch (e=> { 
                     this.$toast.add({severity:'error', summary: 'Error', detail: e.response.data.detail + '. Vuelva a ingresar', life: 3000});

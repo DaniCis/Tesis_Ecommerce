@@ -14,7 +14,7 @@
                             <div class="col-6" style="text-align: left">
                                 <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="Ordenar por Precio" @change="onSortChange($event)"/>
                             </div>
-                            <div class="col-6" style="text-align: right">
+                            <div class="col-6" style="text-align: right; z-index:0">
                                 <DataViewLayoutOptions v-model="layout" />
                             </div>
                         </div>
@@ -321,6 +321,9 @@ export default {
 	.product-price {
 		font-size: 1.3rem;
 		font-weight: 600;
+	}
+	.product-name{
+		height: 3rem;
 	}
 }
 @media screen and (max-width: 576px) {

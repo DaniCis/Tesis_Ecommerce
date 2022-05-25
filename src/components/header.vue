@@ -71,7 +71,7 @@
               </div>
               <div class="flex lg:ml-6">
                 <router-link to='/search' class="p-2 text-gray-400 hover:text-gray-500">
-                  <span class="sr-only">Search</span>
+                  <span class="sr-only">Buscar</span>
                   <SearchIcon class="w-7 h-9" aria-hidden="true" />
                 </router-link>
               </div>

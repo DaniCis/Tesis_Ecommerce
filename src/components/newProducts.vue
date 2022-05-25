@@ -2,7 +2,7 @@
 	<Toast />
 	<div class="py-8 px-4 sm:px-6 lg:px-8">
 		<div class="lg:text-center">
-			<h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Nuevos</h2>
+			<h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Lo más nuevo</h2>
 			<p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">Nuevos Productos</p>
 			<p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">Lorem ipsum dolor sit amet consect adipisicing elit.</p>
 		</div>
@@ -14,7 +14,7 @@
                             <div class="col-6" style="text-align: left">
                                 <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="Ordenar por Precio" @change="onSortChange($event)"/>
                             </div>
-                            <div class="col-6" style="text-align: right">
+                            <div class="col-6" style="text-align: right; z-index:0">
                                 <DataViewLayoutOptions v-model="layout" />
                             </div>
                         </div>
@@ -318,6 +318,9 @@ export default {
 	.product-price {
 		font-size: 1.3rem;
 		font-weight: 600;
+	}
+	.product-name{
+		height: 3rem;
 	}
 }
 @media screen and (max-width: 576px) {

@@ -21,10 +21,10 @@
                 </div>
                 <div class="footer-contant">
                   <ul>
-                    <li><a href="#">Laptops</a></li>
-                    <li><a href="#">Tablets</a></li>
-                    <li><a href="#">Teclados</a></li>
-                    <li><a href="#">Impresoras</a></li>
+                    <li><a>Laptops</a></li>
+                    <li><a>Tablets</a></li>
+                    <li><a>Teclados</a></li>
+                    <li><a>Impresoras</a></li>
                   </ul>
                 </div>
               </div>
@@ -36,10 +36,10 @@
                 </div>
                 <div class="footer-contant">
                   <ul>
-                    <li><a href="#">shipping & return</a></li>
-                    <li><a href="#">secure shopping</a></li>
-                    <li><a href="#">gallary</a></li>
-                    <li><a href="#">affiliates</a></li>
+                    <li><a >shipping & return</a></li>
+                    <li><a >secure shopping</a></li>
+                    <li><a >gallary</a></li>
+                    <li><a >affiliates</a></li>
                   </ul>
                 </div>
               </div>

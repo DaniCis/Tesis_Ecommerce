@@ -37,7 +37,7 @@
     </TransitionRoot>
 
     <header class=" bg-white">
-      <p class="bg-indigo-600 h-10 flex items-center justify-center  font-medium text-white px-4 sm:px-6 lg:px-8">Get free delivery on orders over $100</p>
+      <p class="bg-indigo-600 h-10 flex items-center justify-center  font-medium text-white px-4 sm:px-6 lg:px-8">Envíos gratuitos dentro de la ciudad de Quito</p>
       <nav aria-label="Top" class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="border-b border-gray-200">
           <div class="h-16 flex items-center">

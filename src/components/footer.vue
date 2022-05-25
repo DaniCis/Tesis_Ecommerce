@@ -11,7 +11,7 @@
                 <div class="footer-logo">
                   <img src="@/assets/images/CompunexLogo.png" alt="logo" />
                 </div >
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p class="text-gray-700">Todo lo mejor de la tecnología a tu disponibilidad</p>
               </div>
             </div>
             <div class="sm:col-6 lg:col-2 xl:col-offset-1">
@@ -36,10 +36,10 @@
                 </div>
                 <div class="footer-contant">
                   <ul>
-                    <li><a >shipping & return</a></li>
-                    <li><a >secure shopping</a></li>
-                    <li><a >gallary</a></li>
-                    <li><a >affiliates</a></li>
+                    <li><a >Precios competitivos</a></li>
+                    <li><a >Envíos gratuitos</a></li>
+                    <li><a >Productos garantizados</a></li>
+                    <li><a >Compras seguras</a></li>
                   </ul>
                 </div>
               </div>

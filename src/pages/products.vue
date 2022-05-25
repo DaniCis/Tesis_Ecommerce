@@ -4,7 +4,7 @@
 		<div class="lg:text-center">
 			<h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Nuevos</h2>
 			<p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">Todos Nuestros Productos</p>
-			<p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">Lorem ipsum dolor sit amet consect adipisicing elit.</p>
+			<p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">Todo nuestro catálogo de productos a la vanguardia tecnológica a tu disposición.</p>
 		</div>
 		<div class="content-section layout-content implementation mt-4">
             <div class="card">

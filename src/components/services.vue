@@ -2,9 +2,8 @@
   <div class="content py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="lg:text-center">
-        <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Transactions</h2>
+        <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Lo que ofrecemos a nuestros clientes</h2>
         <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">Nuestros Servicios</p>
-        <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">Lorem ipsum dolor sit amet consect adipisicing elit. Possimus magnam voluptatum cupiditate veritatis in accusamus quisquam.</p>
       </div>
 
       <div class="mt-10">
@@ -27,32 +26,32 @@
 </template>
 
 <script>
-import { ClockIcon, GlobeAltIcon, LightningBoltIcon, LibraryIcon, LockClosedIcon } from '@heroicons/vue/outline'
+import {CurrencyDollarIcon,ShieldCheckIcon, LibraryIcon, LockClosedIcon } from '@heroicons/vue/outline'
 
 const features = [
   {
-    name: 'Competitive exchange rates',
+    name: 'Precios Competitivos',
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque',
-    icon: GlobeAltIcon,
+      'Contamos con los mejores precios del mercado a nivel nacional.',
+    icon: CurrencyDollarIcon,
   },
   {
-    name: 'Compras 100% seguras',
+    name: 'Compras 100% Seguras',
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque.',
+      'Nuestra honestidad y seguridad a su beneficio.',
     icon: LockClosedIcon,
   },
   {
-    name: 'Retira gratis en nuestro local',
+    name: 'Envíos gratuitos dentro de Quito',
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque.',
+      'Contamos con alianzas estratégicas con varias empresas de transporte.',
     icon: LibraryIcon
   },
   {
-    name: 'Mobile notifications',
+    name: 'Productos Garantizados',
     description:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque.',
-    icon: ClockIcon,
+      'Todos nuestros productos cumplen con estándares de calidad para brindar una mejor experiencia de compra.',
+    icon: ShieldCheckIcon,
   },
 ]
 

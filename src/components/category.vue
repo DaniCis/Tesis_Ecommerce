@@ -52,12 +52,12 @@ export default {
 	},
 	mounted() {
         this.categorias=[
-            {"nombre": "Computadoras","imagen": "https://www.primefaces.org/primevue/demo/images/product/game-controller.jpg"},
-            {"nombre": "Computadoras","imagen": "https://www.primefaces.org/primevue/demo/images/product/game-controller.jpg"},
-            {"nombre": "Computadoras","imagen": "https://www.primefaces.org/primevue/demo/images/product/game-controller.jpg"},
-            {"nombre": "Computadoras","imagen": "https://www.primefaces.org/primevue/demo/images/product/game-controller.jpg"},
-            {"nombre": "Computadoras","imagen": "https://www.primefaces.org/primevue/demo/images/product/game-controller.jpg"},
-            {"nombre": "Computadoras","imagen": "https://www.primefaces.org/primevue/demo/images/product/game-controller.jpg"},
+            {"nombre": "marca","imagen": "https://logos-marcas.com/wp-content/uploads/2020/11/Kingston-Technology-Logo.png"},
+            {"nombre": "marca","imagen": "https://logos-world.net/wp-content/uploads/2020/08/Dell-Logo-2016-present.jpg"},
+            {"nombre": "marca","imagen": "https://logos-marcas.com/wp-content/uploads/2020/11/Logitech-Logotipo-1997-2012.jpg"},
+            {"nombre": "marca","imagen": "https://logos-marcas.com/wp-content/uploads/2020/11/HP-Logo.png"},
+            {"nombre": "marca","imagen": "https://logos-marcas.com/wp-content/uploads/2020/07/Asus-Logo.png"},
+            {"nombre": "marca","imagen": "https://logos-marcas.com/wp-content/uploads/2020/12/Epson-Logo.png"},
         ]
     },
 }

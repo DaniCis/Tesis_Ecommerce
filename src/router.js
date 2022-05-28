@@ -7,6 +7,7 @@ import Search from './pages/search.vue'
 import Checkout from './pages/checkout.vue'
 import Products from './pages/products.vue'
 import Summary from './pages/orderSummary.vue'
+import Compras from './pages/compras.vue'
 
 const routes = [
     { path: "/", component:Principal },
@@ -14,6 +15,13 @@ const routes = [
     { path: "/register", component:Register },
     { path: "/search", component:Search},
     { path: "/products", component:Products},
+    { 
+      path:"/compras",
+      component:Compras,
+      meta:{
+        requiresAuth:true
+      }
+    },
     { path: "/checkout", 
       component:Checkout, 
       meta:{

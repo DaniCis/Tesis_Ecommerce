@@ -8,6 +8,7 @@ import Checkout from './pages/checkout.vue'
 import Products from './pages/products.vue'
 import Summary from './pages/orderSummary.vue'
 import Compras from './pages/compras.vue'
+import Detalles from './pages/detalleCompra.vue'
 
 const routes = [
     { path: "/", component:Principal },
@@ -18,6 +19,13 @@ const routes = [
     { 
       path:"/compras",
       component:Compras,
+      meta:{
+        requiresAuth:true
+      }
+    },
+    { 
+      path:"/detalleCompra",
+      component:Detalles,
       meta:{
         requiresAuth:true
       }

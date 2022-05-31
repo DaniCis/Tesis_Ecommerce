@@ -30,6 +30,8 @@ import Avatar from 'primevue/avatar'
 import Dialog from 'primevue/dialog'
 import Badge from 'primevue/badge'
 import RadioButton from 'primevue/radiobutton'
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 
 
 const app = createApp(App)
@@ -58,5 +60,7 @@ app.component('Avatar',Avatar)
 app.component('Dialog2',Dialog)
 app.component('Badge',Badge)
 app.component('RadioButton', RadioButton)
+app.component('DataTable', DataTable)
+app.component('Column',Column)
 
 app.mount('#app')

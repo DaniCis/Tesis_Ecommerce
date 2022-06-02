@@ -7,8 +7,8 @@ import Search from './pages/search.vue'
 import Checkout from './pages/checkout.vue'
 import Products from './pages/products.vue'
 import Summary from './pages/orderSummary.vue'
-import Compras from './pages/compras.vue'
-import Detalles from './pages/detalleCompra.vue'
+import Compras from './pages/sales.vue'
+import Detalles from './pages/saleDetail.vue'
 
 const routes = [
     { path: "/", component:Principal },
@@ -17,14 +17,14 @@ const routes = [
     { path: "/search", component:Search},
     { path: "/products", component:Products},
     { 
-      path:"/compras",
+      path:"/sales",
       component:Compras,
       meta:{
         requiresAuth:true
       }
     },
     { 
-      path:"/detalleCompra",
+      path:"/saleDetail/:id",
       component:Detalles,
       meta:{
         requiresAuth:true

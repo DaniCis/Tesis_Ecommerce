@@ -55,7 +55,7 @@
 
       <main class="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8" style=" position:relative; z-index:0;" >
         <div class="relative z-10 flex items-baseline justify-between pt-6">
-          <h2 class="text-2xl font-extrabold tracking-tight text-gray-900 mt-2" style="z-index:0;">Búsqueda de Productos</h2>
+          <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 mt-2" style="z-index:0;">Búsqueda de Productos</h2>
           <div class="flex items-center">
             <button type="button" class="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden" @click="mobileFiltersOpen = true">
               <FilterIcon class="w-8 h-8" aria-hidden="true" />

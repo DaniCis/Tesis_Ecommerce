@@ -65,7 +65,7 @@
                 
                 </div>
                 <span v-if="isLoggedIn" class="h-6 w-px bg-gray-200" aria-hidden="true" />
-                <router-link v-if="isLoggedIn"  to='/compras' class="text-sm font-medium text-gray-700 hover:text-gray-400">Mis compras</router-link>
+                <router-link v-if="isLoggedIn"  to='/sales' class="text-sm font-medium text-gray-700 hover:text-gray-400">Mis compras</router-link>
                 <span class="h-6 w-px bg-gray-200" aria-hidden="true" />
                 <router-link to="/register" v-if="!isLoggedIn" class="text-sm font-medium text-gray-700 hover:text-gray-400">Crear Cuenta</router-link>
                 <div class="flow-root">

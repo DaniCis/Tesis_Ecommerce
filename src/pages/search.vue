@@ -280,7 +280,7 @@
       
       limpiarBuscar(){
         this.submitted = false
-        this.textoBuscar = ''
+        this.texto = ''
         this.mostrar = true
         this.productos = []
         this.marcas = []

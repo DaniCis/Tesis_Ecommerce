@@ -41,7 +41,14 @@
                                 {{nombre}}
                             </h2>
                             <section aria-labelledby="information-heading" class="mt-2">
-                                <p class="text-2xl text-gray-900">{{precio}}</p>
+                                <div v-if="descuento==0">
+                                    <p class="text-2xl text-gray-900">{{precio}}</p>
+                                </div>
+                                <div v-else>
+                                    <span class="text-2xl text-gray-900">${{precioFin}}</span>
+                                    <span class="ml-2" style="text-decoration:line-through">{{precio}}</span>
+                                </div>
+                                
                             </section>
                             <section aria-labelledby="options-heading" class="mt-4">
                                 <form @submit.prevent="addToCart(cantidad, stock)">
@@ -201,9 +208,19 @@ export default {
         async getDetalleProducto(id){
             await this.axios.get(`http://10.147.17.173:5002/detalleProducto/venta/findById/${id}`
             ).then(response => {
+                this.descuento = response.data.descuentoPorcentaje_item
+                this.precio = response.data.pvp_item
+                if(this.descuento != 0 ){
+                    var descuentoP = (parseFloat(this.descuento))/100
+                    var precioFinal = (this.precio.slice(1)) -
+                    ((this.precio.slice(1)) * descuentoP.toFixed(2))
+                }
+                else{
+                    precioFinal = this.precio.slice(1)
+                }
                 this.nombre = response.data.nombre_producto
                 this.detalle = response.data.detalle_producto
-                this.precio = response.data.pvp_item
+                this.precioFin = precioFinal
                 this.stock = response.data.cantidad_producto
                 this.marca = response.data.marca_producto
                 this.nombres = response.data.imagen_producto

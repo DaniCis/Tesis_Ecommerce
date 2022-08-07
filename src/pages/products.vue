@@ -123,7 +123,8 @@ export default {
 					for (let i = 0; i < this.temp.length; i++) {
 						if(this.temp[i].descuentoPorcentaje_item != 0 ){
 							var descuento = (parseFloat(this.temp[i].descuentoPorcentaje_item))/100
-							var precioFinal = (this.temp[i].pvp_item.slice(1)) * descuento.toFixed(2)
+							var precioFinal = (this.temp[i].pvp_item.slice(1)) -
+							((this.temp[i].pvp_item.slice(1)) * descuento.toFixed(2))
 						}
 						else{
 							precioFinal = this.temp[i].pvp_item.slice(1)
